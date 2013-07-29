@@ -42,7 +42,16 @@ class GameCore(object):
     def Quit(self):
         self.isRunning = False
         print "Core loop terminated."
-    
+
+from pn_componententity import ComponentEntity
+from pn_standardcomponents import TextComponent, ShakeComponent
+from pn_utils import Vec2
+
 x = GameCore()
 x.entityManager.AddEntity(FPS_Counter())
+someText = ComponentEntity()
+x.entityManager.AddEntity(someText)
+someText.AddComponent( TextComponent("Hello") )
+someText.AddComponent( ShakeComponent() )
+someText.position = Vec2(50, 50)
 x.Run()

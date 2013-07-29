@@ -1,6 +1,8 @@
 from pn_utils import *
 
 class Entity(object):
+    
+    # Shouldn't be overriden in subclasses
     def __init__(self, my_position=Vec2(0, 0)):
         print "Entity pre-initialization"
         self.id = 0 # Manager will assign before Init() called
