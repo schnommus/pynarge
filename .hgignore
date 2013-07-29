@@ -1,0 +1,9 @@
+syntax: glob
+pn_debug.pyc
+pn_entity.pyc
+pn_entitymanager.pyc
+pn_renderer.pyc
+pn_resourcemanager.pyc
+pn_resources.pyc
+pn_utils.pyc
+pygame_vec2.pyc
