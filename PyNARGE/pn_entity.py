@@ -3,11 +3,12 @@ from pn_utils import *
 class Entity(object):
     
     # Shouldn't be overriden in subclasses
-    def __init__(self, my_position=Vec2(0, 0)):
+    def __init__(self, my_position=Vec2(0, 0), rotation=0.0):
         self.id = 0 # Manager will assign before Init() called
         self.core = None # Same here
         
         self.position = my_position
+        self.rotation = rotation
         
     def _Init(self):
         if self.core.debugInfo:

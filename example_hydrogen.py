@@ -51,7 +51,7 @@ class GravityCenter(ComponentEntity):
 
 # PROGRAM BEGINS
 
-app = GameCore(True, "Hydrogen Demo")
+app = GameCore(False, "Hydrogen Demo")
 
 grav = GravityCenter()
 app.entityManager.AddEntity( grav )

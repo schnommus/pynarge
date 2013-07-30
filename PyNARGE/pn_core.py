@@ -4,6 +4,7 @@ from pn_utils import IdDispensor, Time
 from pn_renderer import Renderer
 from pn_resourcemanager import ResourceManager
 from pn_input import Input
+from pn_physics import PhysicsWorld
 
 from pn_debug import FPS_Counter
 
@@ -16,6 +17,9 @@ class GameCore(object):
 
         self.resourceManager = ResourceManager()
         self.input = Input(self)
+
+        self.physicsWorld = PhysicsWorld(self)
+        self.physicsWorld.Initialize()
         
         self.idDispensor = IdDispensor()
         self.uiManager = EntityManager(self)
@@ -34,6 +38,8 @@ class GameCore(object):
         self.isRunning = True
         while self.isRunning:
             self.time.Tick()
+
+            self.physicsWorld.Update()
             
             self.entityManager.UpdateEntities()
             

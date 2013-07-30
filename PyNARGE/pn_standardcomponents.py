@@ -33,6 +33,7 @@ class SpriteComponent(Component):
 
     def Draw(self):
         self.sprite.position = self.entity.position
+        self.sprite.rotation = -self.entity.rotation
         self.core.renderer.window.draw(self.sprite)
 
 class FollowComponent(Component):
