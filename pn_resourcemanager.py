@@ -12,4 +12,7 @@ class ResourceManager(object):
 
     def FetchDefaultFont(self):
         return self.FetchFont("pn_font.ttf")
+
+    def FetchDefaultFontMono(self):
+        return self.FetchFont("pn_fontmono.ttf")
         

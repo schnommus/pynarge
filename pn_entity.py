@@ -10,15 +10,26 @@ class Entity(object):
         
         self.position = my_position
         
-    def Init(self):
+    def _Init(self):
         print str(type(self)) + " initialized with ID " + str(self.id)
+        self.Init()
         
+    def _Step(self):
+        self.Step()
+        
+    def _Destroy(self):
+        print str(type(self)) + " destroyed " + str(self.id)
+        self.Destroy()
+        
+    def _Draw(self):
+        self.Draw()
+
+    def Init(self):
+        pass
     def Step(self):
         pass
-        
     def Destroy(self):
-        print str(type(self)) + " destroyed " + str(self.id)
-        
+        pass
     def Draw(self):
         pass
 

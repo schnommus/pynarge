@@ -6,9 +6,9 @@ class Renderer(object):
         self.window = None
         
     
-    def Initialize( self, title="PyNARGE Window", size_x=800, size_y=600, fullscreen=False ):
+    def Initialize( self, title="PyNARGE Window", size_x=800, size_y=600, fullscreen=False, antialiasing=False ):
         print "Creating render window..."
-        self.window = sfml.RenderWindow(sfml.VideoMode(size_x, size_y), title, sfml.window.Style.FULLSCREEN if fullscreen else sfml.window.Style.DEFAULT )
+        self.window = sfml.RenderWindow(sfml.VideoMode(size_x, size_y), title, sfml.window.Style.FULLSCREEN if fullscreen else sfml.window.Style.DEFAULT, sfml.window.ContextSettings(0, 0, 8) if antialiasing else None )
 
     def Update( self ):
         for event in self.window.events:

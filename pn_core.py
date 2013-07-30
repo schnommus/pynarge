@@ -23,6 +23,11 @@ class GameCore(object):
 
         self.isRunning = False
 
+        self.debugInfo = True
+
+        if self.debugInfo:
+            self.entityManager.AddEntity( FPS_Counter() )
+
     def Run(self):
         self.isRunning = True
         while self.isRunning:
@@ -44,14 +49,18 @@ class GameCore(object):
         print "Core loop terminated."
 
 from pn_componententity import ComponentEntity
-from pn_standardcomponents import TextComponent, ShakeComponent
+from pn_standardcomponents import TextComponent, BrownianComponent
 from pn_utils import Vec2
+import random
+
+class HelloText(ComponentEntity):
+    def Build(self):
+        self.AddComponent( TextComponent("Hello") )
+        self.AddComponent( BrownianComponent() )
+    def Init(self):
+        self.position = Vec2(random.randint(1, 500), random.randint(1, 500))
 
 x = GameCore()
-x.entityManager.AddEntity(FPS_Counter())
-someText = ComponentEntity()
-x.entityManager.AddEntity(someText)
-someText.AddComponent( TextComponent("Hello") )
-someText.AddComponent( ShakeComponent() )
-someText.position = Vec2(50, 50)
+for i in range(100):
+    x.entityManager.AddEntity( HelloText() )
 x.Run()

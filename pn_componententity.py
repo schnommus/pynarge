@@ -1,4 +1,6 @@
 from pn_entity import Entity
+from pn_standardcomponents import TextComponent
+from pn_utils import Vec2
 
 class ComponentEntity(Entity):
     def __init__(self):
@@ -9,18 +11,37 @@ class ComponentEntity(Entity):
         self.components.append(component)
         component.core = self.core
         component.entity = self
-        component.Init()
+
+        if self.core != None:
+            component.Init()
+
+    def Build(self):
+        pass
         
-    def Step(self):
+    def _Init(self):
+        print str(type(self)) + " initialized with ID " + str(self.id)
+        self.Build()
+
+        if self.core.debugInfo:
+            self.AddComponent(TextComponent(str(type(self).__name__), self.core.resourceManager.FetchDefaultFontMono(), 12, Vec2(0, -10)))
+        
+        for component in self.components:
+            component.Init()
+        self.Init()
+        
+    def _Step(self):
         for component in self.components:
             component.Step()
+        self.Step()
         
-    def Destroy(self):
+    def _Destroy(self):
         print str(type(self)) + " destroyed " + str(self.id)
         for component in self.components:
             component.Destroy()
+        self.Destroy()
         
-    def Draw(self):
+    def _Draw(self):
         for component in self.components:
             component.Draw()
+        self.Draw()
 

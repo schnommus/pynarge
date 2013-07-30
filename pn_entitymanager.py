@@ -9,19 +9,19 @@ class EntityManager(object):
         ent.id = self.core.idDispensor.GetNewID()
         ent.core = self.core
         self.entities.append(ent)
-        ent.Init()
+        ent._Init()
 
     def RemoveEntity(self, ent):
         for i in range( len( self.entities ) ):
             if self.entities[i] == ent:
-                self.entities[i].Destroy()
+                self.entities[i]._Destroy()
                 del self.entities[i]
                 break
 
     def RemoveEntityByID(self, the_id):
         for i in range( len( self.entities ) ):
             if self.entities[i].id == the_id:
-                self.entities[i].Destroy()
+                self.entities[i]._Destroy()
                 self.core.idDispensor.FreeID(the_id)
                 del self.entities[i]
                 break
@@ -33,8 +33,8 @@ class EntityManager(object):
 
     def UpdateEntities(self):
         for ent in self.entities:
-            ent.Step()
+            ent._Step()
 
     def DrawEntities(self):
         for ent in self.entities:
-            ent.Draw()
+            ent._Draw()

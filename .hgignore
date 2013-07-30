@@ -7,3 +7,6 @@ pn_resourcemanager.pyc
 pn_resources.pyc
 pn_utils.pyc
 pygame_vec2.pyc
+pn_component.pyc
+pn_componententity.pyc
+pn_standardcomponents.pyc
