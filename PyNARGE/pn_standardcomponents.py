@@ -58,4 +58,32 @@ class BrownianComponent(Component):
         self.entity.position.x += randint(-self.factor, self.factor)*self.core.time.GetDelta()
         self.entity.position.y += randint(-self.factor, self.factor)*self.core.time.GetDelta()
 
+class VelocityComponent(Component):
+    def Init(self, startingVelocity=Vec2(0, 0)):
+        self.velocity = startingVelocity
+
+    def SetVelocity(self, velocity):
+        self.velocity = Vec2(velocity)
+    
+    def Step(self):
+        self.entity.position += self.velocity*self.core.time.GetDelta()
+
+class AttractedToComponent(Component):
+    def __init__(self, target=None, factor=1.0):
+        self.target = target
+        self.factor = factor
+
+    def SetTarget(self, target):
+        self.target = target
+
+    def SetFactor(self, factor):
+        self.factor = factor
+
+    def Step(self):
+        if self.target:
+            diff = Vec2(self.target.position)-Vec2(self.entity.position)
+            dist = max(self.entity.position.get_distance(self.target.position)**2, 3)
+            direction = diff.normalized()
+            self.entity.FetchComponent( VelocityComponent ).velocity = self.entity.FetchComponent( VelocityComponent ).velocity + direction*((self.factor*self.core.time.GetDelta())/(dist))
+
 

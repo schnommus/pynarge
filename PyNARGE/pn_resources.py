@@ -14,3 +14,8 @@ class Sprite(sfml.Sprite):
 
 class Texture(sfml.Texture):
     pass
+
+import os
+
+def EngineMediaDirectory():
+    return os.path.dirname(os.path.realpath(__file__))+"\\EngineMedia\\"

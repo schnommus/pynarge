@@ -1,4 +1,4 @@
-from pn_resources import Font, Texture
+from pn_resources import Font, Texture, EngineMediaDirectory
 
 class ResourceManager(object):
     def __init__(self):
@@ -11,10 +11,10 @@ class ResourceManager(object):
         return self.fonts[filename]
 
     def FetchDefaultFont(self):
-        return self.FetchFont("pn_font.ttf")
+        return self.FetchFont(EngineMediaDirectory()+"pn_font.ttf")
 
     def FetchDefaultFontMono(self):
-        return self.FetchFont("pn_fontmono.ttf")
+        return self.FetchFont(EngineMediaDirectory()+"pn_fontmono.ttf")
 
     def FetchTexture(self, filename):
         if filename not in self.textures.keys():
