@@ -4,21 +4,22 @@ class Entity(object):
     
     # Shouldn't be overriden in subclasses
     def __init__(self, my_position=Vec2(0, 0)):
-        print "Entity pre-initialization"
         self.id = 0 # Manager will assign before Init() called
         self.core = None # Same here
         
         self.position = my_position
         
     def _Init(self):
-        print str(type(self)) + " initialized with ID " + str(self.id)
+        if self.core.debugInfo:
+            print str(type(self)) + " initialized with ID " + str(self.id)
         self.Init()
         
     def _Step(self):
         self.Step()
         
     def _Destroy(self):
-        print str(type(self)) + " destroyed " + str(self.id)
+        if self.core.debugInfo:
+            print str(type(self)) + " destroyed " + str(self.id)
         self.Destroy()
         
     def _Draw(self):

@@ -10,3 +10,6 @@ pygame_vec2.pyc
 pn_component.pyc
 pn_componententity.pyc
 pn_standardcomponents.pyc
+PyNARGE.pyc
+pn_core.pyc
+pn_input.pyc

@@ -8,3 +8,9 @@ class Text(sfml.Text):
 
 class Color(sfml.Color):
     pass
+
+class Sprite(sfml.Sprite):
+    pass
+
+class Texture(sfml.Texture):
+    pass

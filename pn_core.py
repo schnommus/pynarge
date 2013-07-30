@@ -3,17 +3,19 @@ from pn_entity import Entity
 from pn_utils import IdDispensor, Time
 from pn_renderer import Renderer
 from pn_resourcemanager import ResourceManager
+from pn_input import Input
 
 from pn_debug import FPS_Counter
 
 class GameCore(object):
-    def __init__(self):
+    def __init__(self, debugInfo=False, title="PyNARGE Window", size_x=800, size_y=600, fullscreen=False, antialiasing=False ):
         print "Initializing core engine components..."
         
         self.renderer = Renderer(self)
-        self.renderer.Initialize()
+        self.renderer.Initialize(title, size_x, size_y, fullscreen, antialiasing)
 
         self.resourceManager = ResourceManager()
+        self.input = Input(self)
         
         self.idDispensor = IdDispensor()
         self.uiManager = EntityManager(self)
@@ -23,7 +25,7 @@ class GameCore(object):
 
         self.isRunning = False
 
-        self.debugInfo = True
+        self.debugInfo = debugInfo
 
         if self.debugInfo:
             self.entityManager.AddEntity( FPS_Counter() )
@@ -47,20 +49,3 @@ class GameCore(object):
     def Quit(self):
         self.isRunning = False
         print "Core loop terminated."
-
-from pn_componententity import ComponentEntity
-from pn_standardcomponents import TextComponent, BrownianComponent
-from pn_utils import Vec2
-import random
-
-class HelloText(ComponentEntity):
-    def Build(self):
-        self.AddComponent( TextComponent("Hello") )
-        self.AddComponent( BrownianComponent() )
-    def Init(self):
-        self.position = Vec2(random.randint(1, 500), random.randint(1, 500))
-
-x = GameCore()
-for i in range(100):
-    x.entityManager.AddEntity( HelloText() )
-x.Run()

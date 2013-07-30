@@ -15,15 +15,20 @@ class ComponentEntity(Entity):
         if self.core != None:
             component.Init()
 
+    def FetchComponent(self, componentClass):
+        for component in self.components:
+            if type(component)==componentClass:
+                return component
+
     def Build(self):
         pass
         
     def _Init(self):
-        print str(type(self)) + " initialized with ID " + str(self.id)
         self.Build()
 
         if self.core.debugInfo:
             self.AddComponent(TextComponent(str(type(self).__name__), self.core.resourceManager.FetchDefaultFontMono(), 12, Vec2(0, -10)))
+            print str(type(self)) + " initialized with ID " + str(self.id)
         
         for component in self.components:
             component.Init()
@@ -35,7 +40,8 @@ class ComponentEntity(Entity):
         self.Step()
         
     def _Destroy(self):
-        print str(type(self)) + " destroyed " + str(self.id)
+        if self.core.debugInfo:
+            print str(type(self)) + " destroyed " + str(self.id)
         for component in self.components:
             component.Destroy()
         self.Destroy()
