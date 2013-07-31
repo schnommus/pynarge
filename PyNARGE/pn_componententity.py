@@ -12,8 +12,8 @@ class ComponentEntity(Entity):
         component.core = self.core
         component.entity = self
 
-        if self.core != None:
-            component.Init()
+##        if self.core != None:
+##            component.Init()
 
     def FetchComponent(self, componentClass):
         for component in self.components:
