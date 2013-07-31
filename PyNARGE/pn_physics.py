@@ -19,44 +19,57 @@ class PhysicsWorld(object):
     def GetWindowSize(self):
         return self.size
 
-    def ToScreenCoords(self, coords):
-        return Vec2(coords.x*self.physicsScale, 500-coords.y*self.physicsScale)
+    def LocalToScreen(self, coords):
+        return Vec2(float(coords.x)*self.physicsScale, float(coords.y)*self.physicsScale)
+
+    def LocalToWorld(self, coords):
+        return Vec2(float(coords.x)/self.physicsScale, float(coords.y)/self.physicsScale)
+
+    def GlobalToScreen(self, coords):
+        return Vec2(float(coords.x)*self.physicsScale+self.core.renderer.window.size.x/2, self.core.renderer.window.size.y/2-float(coords.y)*self.physicsScale)
     
-    def ToWorldCoords(self, coords):
-        return Vec2(coords.x/self.physicsScale, (500-coords.y)/self.physicsScale)
+    def GlobalToWorld(self, coords):
+        return Vec2((float(coords.x)-self.core.renderer.window.size.x/2)/self.physicsScale, (self.core.renderer.window.size.y/2-float(coords.y))/self.physicsScale)
 
 class StaticBody_Rectangular(Component):
-    def __init__( self, size=(1, 1), position=(0, 0) ):
+    def __init__( self, size, position=(0,0) ):
         self.size = Vec2(size)
         self.position = Vec2(position)
         
     def Init(self):
-        self.core.physicsWorld.world.CreateStaticBody( position=self.position, shapes=b2PolygonShape(box=self.size) )
+        self.size = self.core.physicsWorld.LocalToWorld(self.size)
+        self.position = self.core.physicsWorld.GlobalToWorld(self.position)
+        print self.size, self.position
+        b=self.core.physicsWorld.world.CreateStaticBody( position=self.position, shapes=b2PolygonShape(box=self.size) )
 
 class RigidBody_Rectangular(Component):
-    def __init__( self, size=(1, 1), position=(0, 0) ):
+    def __init__( self, size, position=(0,0) ):
         self.size = Vec2(size)
         self.position = Vec2(position)
         self.body = None
 
     def Init(self):
+        self.size = self.core.physicsWorld.LocalToWorld(self.size)
+        self.position = self.core.physicsWorld.GlobalToWorld(self.position)
         self.body = self.core.physicsWorld.world.CreateDynamicBody(position=self.position)
         self.body.CreatePolygonFixture(box=self.size, density=1, friction=0.3)
 
     def Step(self):
         self.entity.rotation = 180*self.body.angle/3.1416
-        self.entity.position = self.core.physicsWorld.ToScreenCoords(self.body.position)
+        self.entity.position = self.core.physicsWorld.GlobalToScreen(self.body.position)
 
 class RigidBody_Circular(Component):
-    def __init__( self, radius=1.0, position=(0, 0) ):
-        self.radius = radius
+    def __init__( self, radius, position=(0,0) ):
+        self.radius = float(radius)
         self.position = Vec2(position)
         self.body = None
 
     def Init(self):
+        self.radius /= self.core.physicsWorld.physicsScale
+        self.position = self.core.physicsWorld.GlobalToWorld(self.position)
         self.body = self.core.physicsWorld.world.CreateDynamicBody(position=self.position)
         self.body.CreateFixture(shape=b2CircleShape(radius=self.radius), density=1, friction=0.3)
 
     def Step(self):
         self.entity.rotation = 180*self.body.angle/3.1416
-        self.entity.position = self.core.physicsWorld.ToScreenCoords(self.body.position)
+        self.entity.position = self.core.physicsWorld.GlobalToScreen(self.body.position)
