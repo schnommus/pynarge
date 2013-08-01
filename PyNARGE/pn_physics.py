@@ -83,27 +83,33 @@ class fwQueryCallback(b2QueryCallback):
 # BEGIN BODY DEFINITIONS
 
 class StaticBody_Rectangular(Component):
-    def __init__( self, size, position=(0,0) ):
+    def __init__( self, size, position=(0,0), angle=0.0 ):
         self.size = Vec2(size)
         self.position = Vec2(position)
+        self.angledeg = angle
+        self.anglerad = 3.141*float(angle)/180.0
         
     def Init(self):
         self.entity.position = self.position
+        self.entity.rotation = self.angledeg
         self.size = self.core.physicsWorld.LocalToWorld(self.size)
         self.position = self.core.physicsWorld.GlobalToWorld(self.position)
-        b=self.core.physicsWorld.world.CreateStaticBody( position=self.position, shapes=b2PolygonShape(box=self.size) )
+        b=self.core.physicsWorld.world.CreateStaticBody( position=self.position, angle=self.anglerad, shapes=b2PolygonShape(box=self.size) )
+        
 
 class RigidBody_Rectangular(Component):
-    def __init__( self, size, position=(0,0) ):
+    def __init__( self, size, position=(0,0), friction=0.3, density=1.0 ):
         self.size = Vec2(size)
         self.position = Vec2(position)
         self.body = None
+        self.friction = friction
+        self.density = density
 
     def Init(self):
         self.size = self.core.physicsWorld.LocalToWorld(self.size)
         self.position = self.core.physicsWorld.GlobalToWorld(self.position)
         self.body = self.core.physicsWorld.world.CreateDynamicBody(position=self.position)
-        self.body.CreatePolygonFixture(box=self.size, density=1, friction=0.3)
+        self.body.CreatePolygonFixture(box=self.size, density=self.density, friction=self.friction)
 
     def Step(self):
         self.entity.rotation = 180*self.body.angle/3.1416
@@ -113,16 +119,18 @@ class RigidBody_Rectangular(Component):
         self.core.physicsWorld.world.DestroyBody(self.body)
 
 class RigidBody_Circular(Component):
-    def __init__( self, radius, position=(0,0) ):
+    def __init__( self, radius, position=(0,0), friction=0.3, density=1.0 ):
         self.radius = float(radius)
         self.position = Vec2(position)
         self.body = None
+        self.friction = friction
+        self.density = density
 
     def Init(self):
         self.radius /= self.core.physicsWorld.physicsScale
         self.position = self.core.physicsWorld.GlobalToWorld(self.position)
         self.body = self.core.physicsWorld.world.CreateDynamicBody(position=self.position)
-        self.body.CreateFixture(shape=b2CircleShape(radius=self.radius), density=1, friction=0.3)
+        self.body.CreateFixture(shape=b2CircleShape(radius=self.radius), density=self.density, friction=self.friction)
 
     def Step(self):
         self.entity.rotation = 180*self.body.angle/3.1416

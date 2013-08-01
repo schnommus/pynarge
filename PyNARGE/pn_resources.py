@@ -15,6 +15,12 @@ class Sprite(sfml.Sprite):
 class Texture(sfml.Texture):
     pass
 
+class RenderTexture(sfml.RenderTexture):
+    pass
+
+class Shader(sfml.Shader):
+    pass
+
 import os
 
 def EngineMediaDirectory():

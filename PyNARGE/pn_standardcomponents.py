@@ -24,11 +24,12 @@ class TextComponent(Component):
         self.text.string = self.message
         
     def Draw(self):
-        self.core.renderer.window.draw(self.text)
+        self.core.renderer.Draw(self.text)
 
 class SpriteComponent(Component):
-    def __init__(self, texture, forcedSize=None):
+    def __init__(self, texture, forcedSize=None, shaderPass=None):
         self.sprite = Sprite(texture)
+        self.shaderPass = shaderPass
         
         if forcedSize != None:
             forcedSize = Vec2(forcedSize)
@@ -41,7 +42,7 @@ class SpriteComponent(Component):
     def Draw(self):
         self.sprite.position = self.entity.position
         self.sprite.rotation = -self.entity.rotation
-        self.core.renderer.window.draw(self.sprite)
+        self.core.renderer.Draw(self.sprite, self.shaderPass)
 
 class FollowComponent(Component):
     def __init__(self, target=None, offset=Vec2(0,0)):
