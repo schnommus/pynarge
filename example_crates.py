@@ -25,13 +25,24 @@ class Ground(ComponentEntity):
         self.AddComponent( StaticBody_Rectangular( Vec2(300, 10), Vec2(appSize.x/2, appSize.y-100) ) )
         self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture("media\\bar.png") ) )
 
+class HelperText(ComponentEntity):
+    def Build(self):
+        self.AddComponent( TextComponent("Click and drag mouse to manipulate objects") )
+        self.position = (appSize.x/2-200, appSize.y-65)
 
+class Background(ComponentEntity):
+    def Build(self):
+        self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture("media\\background.jpg"), (appSize.x, appSize.y) ) )
+        self.position = (appSize.x/2, appSize.y/2)
+        
 # PROGRAM BEGINS
 
 app = GameCore(False, "Crates Demo", appSize.x, appSize.y, False)
 
 app.renderer.window.framerate_limit = 60
 
+app.entityManager.AddEntity( Background() )
+app.entityManager.AddEntity( HelperText() )
 app.entityManager.AddEntity( Ground() )
 
 for i in range(100):

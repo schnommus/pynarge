@@ -27,8 +27,15 @@ class TextComponent(Component):
         self.core.renderer.window.draw(self.text)
 
 class SpriteComponent(Component):
-    def __init__(self, texture):
+    def __init__(self, texture, forcedSize=None):
         self.sprite = Sprite(texture)
+        
+        if forcedSize != None:
+            forcedSize = Vec2(forcedSize)
+            self.sprite.scale(
+                ( float(forcedSize.x)/float(texture.size.x),
+                float(forcedSize.y)/float(texture.size.y) ) )
+            
         self.sprite.origin = Vec2(texture.size)/2
 
     def Draw(self):
