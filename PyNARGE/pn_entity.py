@@ -2,13 +2,14 @@ from pn_utils import *
 
 class Entity(object):
     
-    # Subclasses must call this first if they want a constructor
-    def __init__(self, my_position=Vec2(0, 0), rotation=0.0):
+    # Subclasses should call this first if they want a constructor
+    def __init__(self, position=Vec2(0, 0), rotation=0.0, size=Vec2(100,100) ):
         self.id = 0 # Manager will assign before Init() called
         self.core = None # Same here
         
-        self.position = my_position
-        self.rotation = rotation
+        self.position = Vec2(position)
+        self.rotation = float(rotation)
+        self.size = Vec2(size)
         self.drawlayer = 0
         self.steplayer = 0
         

@@ -17,3 +17,4 @@ PyNARGE/__init__.pyc
 PyNARGE/pn_physics.pyc
 PyNARGE/pn_shader.pyc
 PyNARGE/pn_standardentities.pyc
+PyNARGE/pn_engineshaders.pyc

@@ -3,8 +3,8 @@ from pn_standardcomponents import TextComponent
 from pn_utils import Vec2
 
 class ComponentEntity(Entity):
-    def __init__(self):
-        Entity.__init__(self)
+    def __init__(self, position=Vec2(0, 0), rotation=0.0, size=Vec2(100,100) ):
+        Entity.__init__(self, position, rotation, size)
         self.components = []
     
     def AddComponent(self, component):

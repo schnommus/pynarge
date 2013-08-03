@@ -77,6 +77,15 @@ class VelocityComponent(Component):
     def Step(self):
         self.entity.position += self.velocity*self.core.time.GetDelta()
 
+class RespawnableComponent(Component):
+    def __init__(self, condition):
+        self.condition = condition
+        
+    def Step(self):
+        if self.condition(self.entity): # If object is offscreen
+            self.core.entityManager.AddEntity( type(self.entity)() ) # Spawn new object
+            self.core.entityManager.RemoveEntity(self.entity) # Destroy self
+
 class AttractedToComponent(Component):
     def __init__(self, target=None, factor=1.0):
         self.target = target

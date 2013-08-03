@@ -12,10 +12,10 @@ class ResourceManager(object):
         return self.fonts[filename]
 
     def FetchDefaultFont(self):
-        return self.FetchFont(EngineMediaDirectory()+"pn_font.ttf")
+        return self.FetchFont(EngineMediaDirectory()+"fonts\pn_font.ttf")
 
     def FetchDefaultFontMono(self):
-        return self.FetchFont(EngineMediaDirectory()+"pn_fontmono.ttf")
+        return self.FetchFont(EngineMediaDirectory()+"fonts\pn_fontmono.ttf")
 
     def FetchTexture(self, filename):
         if filename not in self.textures.keys():

@@ -1,5 +1,7 @@
 from pn_componententity import *
 from pn_standardcomponents import *
+from pn_physics import *
+from pn_resources import *
 
 class BackgroundImage(ComponentEntity):
     def __init__(self, texture):
@@ -24,3 +26,9 @@ class DefaultText(ComponentEntity):
         
     def Build(self):
         self.AddComponent( TextComponent(self.text) )
+
+
+class WaterParticle(ComponentEntity):
+    def Build(self):
+        self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture(EngineMediaDirectory()+r"textures\waterparticle.png"), (16, 16), self.core.engineShaders.GetWaterShader()) )
+        self.AddComponent( RigidBody_Circular(6, self.position, 0.0, 0.2 ) )
