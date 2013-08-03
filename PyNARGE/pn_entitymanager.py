@@ -1,3 +1,4 @@
+import operator
 from pn_entity import Entity
 
 class EntityManager(object):
@@ -10,6 +11,7 @@ class EntityManager(object):
         ent.core = self.core
         self.entities.append(ent)
         ent._Init()
+        return ent
 
     def RemoveEntity(self, ent):
         for i in range( len( self.entities ) ):
@@ -32,9 +34,11 @@ class EntityManager(object):
                 return self.entities[i]
 
     def UpdateEntities(self):
+        self.entities.sort(key=operator.attrgetter('steplayer'))
         for ent in self.entities:
             ent._Step()
 
     def DrawEntities(self):
+        self.entities.sort(key=operator.attrgetter('drawlayer'))
         for ent in self.entities:
             ent._Draw()

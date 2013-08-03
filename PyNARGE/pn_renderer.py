@@ -7,13 +7,25 @@ class Renderer(object):
         self.window = None
         self.size = Vec2(0, 0)
         self.shaderpasses = []
+        self.cameraView = None
+        self.uiView = None
     
     def Initialize( self, title="PyNARGE Window", size_x=800, size_y=600, fullscreen=False, antialiasing=False ):
         print "Creating render window..."
         self.size = Vec2(size_x, size_y)
         self.window = sfml.RenderWindow(sfml.VideoMode(size_x, size_y), title, sfml.window.Style.FULLSCREEN if fullscreen else sfml.window.Style.DEFAULT, sfml.window.ContextSettings(0, 0, 8) if antialiasing else None )
         self._draw = self.window.draw
+
+        self.cameraView = self.window.default_view
+        self.uiView = self.window.default_view
         
+
+    def SetViewToCamera( self ):
+        self.window.view = self.cameraView
+
+    def SetViewToUI( self ):
+        self.window.view = self.uiView
+    
     def AddShaderPass( self, shaderpass ):
         shaderpass.core = self.core
         shaderpass.Initialize( self.size )
@@ -25,15 +37,24 @@ class Renderer(object):
             self.window.draw(ent)
         else:
             shaderpass.Draw(ent)
+
+    def SetCameraPosition( self, position ):
+        self.cameraView.center = Vec2(position)
+        for p in self.shaderpasses:
+            p.SetCenter(position)
+
+    def GetCameraPosition( self ):
+        return Vec2( self.cameraView.center )
+
+    def DrawShaders( self ):
+        for p in self.shaderpasses:
+            p.SendToTarget()
     
     def Update( self ):
         for event in self.window.events:
             if type(event) is sfml.CloseEvent:
                 self.window.close()
                 self.core.Quit()
-
-        for p in self.shaderpasses:
-            p.SendToDisplay()
         
         self.window.display()
         self.window.clear(sfml.Color(0, 0, 0))

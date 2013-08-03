@@ -1,3 +1,4 @@
+from pn_utils import *
 import sfml
 
 class Input(object):
@@ -8,5 +9,9 @@ class Input(object):
         self.mouse = sfml.window.Mouse
 
     def GetMousePosition(self):
-        return self.core.input.mouse.get_position(self.core.renderer.window)
-        
+        mouse = Vec2(self.core.input.mouse.get_position(self.core.renderer.window))
+        camera = self.core.renderer.GetCameraPosition()-self.core.renderer.GetWindowSize()/2
+        return mouse + camera
+
+    def GetMousePositionUI(self):
+        return Vec2(self.core.input.mouse.get_position(self.core.renderer.window))

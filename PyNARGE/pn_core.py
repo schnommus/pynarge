@@ -42,8 +42,18 @@ class GameCore(object):
             self.physicsWorld.Update()
             
             self.entityManager.UpdateEntities()
+
+            self.uiManager.UpdateEntities()
+
+            self.renderer.SetViewToCamera()
             
             self.entityManager.DrawEntities()
+
+            self.renderer.DrawShaders()
+
+            self.renderer.SetViewToUI()
+
+            self.uiManager.DrawEntities()
             
             self.renderer.Update()
 

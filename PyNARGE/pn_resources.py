@@ -21,6 +21,9 @@ class RenderTexture(sfml.RenderTexture):
 class Shader(sfml.Shader):
     pass
 
+class RenderStates(sfml.RenderStates):
+    pass
+
 import os
 
 def EngineMediaDirectory():

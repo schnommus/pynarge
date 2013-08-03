@@ -4,15 +4,15 @@ uniform float sigma=3;     // The sigma value for the gaussian function: higher 
                          // A good value for 5x5 is around 2 to 3.5
                          // ... play around with this based on what you need :)
 
-uniform float blurSize = 1.0f/400;  // This should usually be equal to
-                         // 1.0f / texture_pixel_width for a horizontal blur, and
-                         // 1.0f / texture_pixel_height for a vertical blur.
+uniform float size_x;
+uniform float size_y;
+						
 
 uniform sampler2D texture;  // Texture that will be blurred by this shader
 
 const float pi = 3.14159265f;
 
-#define VERTICAL_BLUR_7
+#define VERTICAL_BLUR_9
 
 // The following are all mutually exclusive macros for various 
 // seperable blurs of varying kernel size
@@ -41,7 +41,9 @@ const vec2  blurMultiplyVec      = vec2(0.0f, 0.0f);
 #endif
 
 void main() {
-
+  float blurSize = 1.0f/(size_y/2);
+  
+  
   // Incremental Gaussian Coefficent Calculation (See GPU Gems 3 pp. 877 - 889)
   vec3 incrementalGaussian;
   incrementalGaussian.x = 1.0f / (sqrt(2.0f * pi) * sigma);

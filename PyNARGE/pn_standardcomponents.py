@@ -38,7 +38,7 @@ class SpriteComponent(Component):
                 float(forcedSize.y)/float(texture.size.y) ) )
             
         self.sprite.origin = Vec2(texture.size)/2
-
+    
     def Draw(self):
         self.sprite.position = self.entity.position
         self.sprite.rotation = -self.entity.rotation
