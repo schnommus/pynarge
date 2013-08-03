@@ -18,8 +18,11 @@ class Renderer(object):
 
         self.cameraView = self.window.default_view
         self.uiView = self.window.default_view
-        
 
+    def AlignShaders( self ):
+        # For some reason, SFML wants this: first frame only though.
+        self.SetCameraPosition( self.GetCameraPosition() + (1, 0) )
+    
     def SetViewToCamera( self ):
         self.window.view = self.cameraView
 

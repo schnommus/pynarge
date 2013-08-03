@@ -18,7 +18,25 @@ class PhysicsWorld(object):
         self.world.ClearForces()
         self.Debug_ProcessMouseJoints()
 
+    def DoMouseQueries(self):
+        self.deleteWithRMB = True
+        mouse = self.core.input.mouse
+        p = self.GlobalToWorld( self.core.input.GetMousePosition() )
+        aabb = b2AABB(lowerBound=p-(0.001, 0.001), upperBound=p+(0.001, 0.001))
+        query = fwQueryCallback(p)
+        self.world.QueryAABB(query, aabb)
+        if query.fixture:
+            body = query.fixture.body
+            for ent in self.core.entityManager.entities:
+                if hasattr(ent, "body") and ent.body == body:
+                    ent.OnMouseOver()
+                    if self.deleteWithRMB and mouse.is_button_pressed( mouse.RIGHT ):
+                        self.core.entityManager.RemoveEntity(ent)
+                    break
+    
     def Debug_ProcessMouseJoints( self ):
+        self.DoMouseQueries()
+        
         mouse = self.core.input.mouse
         p = self.GlobalToWorld( self.core.input.GetMousePosition() )
         
@@ -82,7 +100,10 @@ class fwQueryCallback(b2QueryCallback):
 
 # BEGIN BODY DEFINITIONS
 
-class StaticBody_Rectangular(Component):
+class PhysicsComponent(Component):
+    pass
+
+class StaticBody_Rectangular(PhysicsComponent):
     def __init__( self, size, position=(0,0), angle=0.0 ):
         self.size = Vec2(size)
         self.position = Vec2(position)
@@ -94,10 +115,10 @@ class StaticBody_Rectangular(Component):
         self.entity.rotation = self.angledeg
         self.size = self.core.physicsWorld.LocalToWorld(self.size)
         self.position = self.core.physicsWorld.GlobalToWorld(self.position)
-        b=self.core.physicsWorld.world.CreateStaticBody( position=self.position, angle=self.anglerad, shapes=b2PolygonShape(box=self.size) )
+        self.entity.body=self.core.physicsWorld.world.CreateStaticBody( position=self.position, angle=self.anglerad, shapes=b2PolygonShape(box=self.size) )
         
 
-class RigidBody_Rectangular(Component):
+class RigidBody_Rectangular(PhysicsComponent):
     def __init__( self, size, position=(0,0), friction=0.3, density=1.0 ):
         self.size = Vec2(size)
         self.position = Vec2(position)
@@ -110,6 +131,7 @@ class RigidBody_Rectangular(Component):
         self.position = self.core.physicsWorld.GlobalToWorld(self.position)
         self.body = self.core.physicsWorld.world.CreateDynamicBody(position=self.position)
         self.body.CreatePolygonFixture(box=self.size, density=self.density, friction=self.friction)
+        self.entity.body = self.body
 
     def Step(self):
         self.entity.rotation = 180*self.body.angle/3.1416
@@ -118,7 +140,7 @@ class RigidBody_Rectangular(Component):
     def Destroy(self):
         self.core.physicsWorld.world.DestroyBody(self.body)
 
-class RigidBody_Circular(Component):
+class RigidBody_Circular(PhysicsComponent):
     def __init__( self, radius, position=(0,0), friction=0.3, density=1.0 ):
         self.radius = float(radius)
         self.position = Vec2(position)
@@ -131,6 +153,7 @@ class RigidBody_Circular(Component):
         self.position = self.core.physicsWorld.GlobalToWorld(self.position)
         self.body = self.core.physicsWorld.world.CreateDynamicBody(position=self.position)
         self.body.CreateFixture(shape=b2CircleShape(radius=self.radius), density=self.density, friction=self.friction)
+        self.entity.body = self.body
 
     def Step(self):
         self.entity.rotation = 180*self.body.angle/3.1416

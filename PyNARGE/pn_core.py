@@ -37,6 +37,8 @@ class GameCore(object):
             self.entityManager.AddEntity( FPS_Counter() )
 
     def Run(self):
+        self.renderer.AlignShaders()
+        
         self.isRunning = True
         while self.isRunning:
             self.time.Tick()

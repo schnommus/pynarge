@@ -79,6 +79,7 @@ class VelocityComponent(Component):
 
 class RespawnableComponent(Component):
     def __init__(self, condition):
+        
         self.condition = condition
         
     def Step(self):

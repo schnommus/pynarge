@@ -29,6 +29,9 @@ class Entity(object):
     def _Draw(self):
         self.Draw()
 
+    def OnMouseOver(self):
+        pass
+
     def Init(self):
         pass
     def Step(self):
