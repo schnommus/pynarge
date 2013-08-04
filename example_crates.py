@@ -26,11 +26,13 @@ class Ground(ComponentEntity):
 
 # PROGRAM BEGINS
 
-app = GameCore(False, "Crates Demo", appSize.x, appSize.y, False)
+settings = Settings()
+settings.window_title = "Crates Demo"
+settings.display_size = appSize
+settings.enable_lmb_manipulation = True
 
-app.renderer.window.framerate_limit = 60
+app = GameCore(settings)
 
-app.uiManager.AddEntity( FPS_Counter() )
 app.uiManager.AddEntity( DefaultText("Click and drag mouse to manipulate objects", (appSize.x/2-200, appSize.y-65) ) )
 
 app.entityManager.AddEntity( BackgroundImage( app.resourceManager.FetchTexture("media\\background.jpg") ) )

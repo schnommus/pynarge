@@ -19,6 +19,9 @@ class Renderer(object):
         self.cameraView = self.window.default_view
         self.uiView = self.window.default_view
 
+        if self.core.settings.limit_framerate:
+            self.window.framerate_limit = 60
+
     def AlignShaders( self ):
         # For some reason, SFML wants this: first frame only though.
         self.SetCameraPosition( self.GetCameraPosition() + (1, 0) )

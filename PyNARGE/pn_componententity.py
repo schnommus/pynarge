@@ -26,9 +26,8 @@ class ComponentEntity(Entity):
     def _Init(self):
         self.Build()
 
-        if self.core.debugInfo:
+        if self.core.settings.label_entity_types:
             self.AddComponent(TextComponent(str(type(self).__name__), self.core.resourceManager.FetchDefaultFontMono(), 12, Vec2(0, -10)))
-            print str(type(self)) + " initialized with ID " + str(self.id)
         
         for component in self.components:
             component.Init()
@@ -40,8 +39,6 @@ class ComponentEntity(Entity):
         self.Step()
         
     def _Destroy(self):
-        if self.core.debugInfo:
-            print str(type(self)) + " destroyed " + str(self.id)
         for component in self.components:
             component.Destroy()
         self.Destroy()

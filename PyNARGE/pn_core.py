@@ -7,13 +7,16 @@ from pn_input import Input
 from pn_physics import PhysicsWorld
 from pn_engineshaders import EngineShaders
 from pn_debug import FPS_Counter
+from pn_settings import Settings
 
 class GameCore(object):
-    def __init__(self, debugInfo=False, title="PyNARGE Window", size_x=800, size_y=600, fullscreen=False, antialiasing=False ):
+    def __init__(self, settings = Settings() ):
         print "Initializing core engine components..."
+
+        self.settings = settings
         
         self.renderer = Renderer(self)
-        self.renderer.Initialize(title, size_x, size_y, fullscreen, antialiasing)
+        self.renderer.Initialize(settings.window_title, settings.display_size.x, settings.display_size.y, settings.display_fullscreen, settings.antialiasing)
 
         self.resourceManager = ResourceManager()
         self.input = Input(self)
@@ -31,10 +34,8 @@ class GameCore(object):
 
         self.isRunning = False
 
-        self.debugInfo = debugInfo
-
-        if self.debugInfo:
-            self.entityManager.AddEntity( FPS_Counter() )
+        if self.settings.display_fps:
+            self.uiManager.AddEntity( FPS_Counter() )
 
     def Run(self):
         self.renderer.AlignShaders()

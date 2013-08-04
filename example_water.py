@@ -27,12 +27,13 @@ class Ground(ComponentEntity):
 
         
 # PROGRAM BEGINS
+settings = Settings()
+settings.window_title = "Water Demo"
+settings.display_size = appSize
+settings.enable_lmb_manipulation = True
 
-app = GameCore(False, "Water Demo", appSize.x, appSize.y, False)
+app = GameCore(settings)
 
-app.renderer.window.framerate_limit = 60
-
-app.uiManager.AddEntity( FPS_Counter() )
 app.uiManager.AddEntity( DefaultText("Click and drag mouse to manipulate objects", (appSize.x/2-200, appSize.y-65) ) )
 
 app.entityManager.AddEntity( BackgroundImage( app.resourceManager.FetchTexture("media\\background.jpg") ) )

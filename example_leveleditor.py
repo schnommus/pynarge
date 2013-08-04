@@ -10,12 +10,7 @@ class CameraController(ComponentEntity):
         self.currentPosition = None
         
     def Step(self):
-        keyboard = self.core.input.keyboard
         mouse = self.core.input.mouse
-
-        if keyboard.is_key_pressed( keyboard.EQUAL ):
-            self.core.renderer.cameraView.zoom(1.0+0.1*self.core.time.GetDelta())
-        
         if mouse.is_button_pressed( mouse.MIDDLE ):
             self.currentPosition = self.core.input.GetMousePositionUI()
             if not self.lastPosition ==  None:
@@ -27,15 +22,28 @@ class CameraController(ComponentEntity):
             self.lastPosition = None
 
 class Spawner(ComponentEntity):
-    def Build(self):
-        self.AddComponent( TextComponent( "Will spawn: ", None, 40 ) )
+    def PopulateTypes(self):
         self.possibleTypes = [Crate, Stone, WaterParticle]
+        
+        # Get an texture representation for each type
+        self.possibleTypeTextures = []
+        for t in self.possibleTypes:
+            ent = self.core.entityManager.AddEntity( t() )
+            self.possibleTypeTextures.append( ent.FetchComponent(SpriteComponent).sprite.texture )
+            self.core.entityManager.RemoveEntity( ent )
+        
+    
+    def Build(self):
+        self.PopulateTypes()
+        self.AddComponent( SpriteComponent( self.possibleTypeTextures[0], None, None, (220, 30) ) )
+        self.AddComponent( TextComponent( "Will spawn: ", None, 40, Color(0, 0, 0) ) )
         self.currentType = 0
         self.hasSpawned = False
         self.hasChanged = False
         
     def Step(self):
-        self.FetchComponent( TextComponent ).SetText("Will spawn: " + str(self.possibleTypes[self.currentType].__name__))
+        self.FetchComponent( TextComponent ).SetText("Will spawn:    (" + str(self.possibleTypes[self.currentType].__name__)+")")
+        self.FetchComponent( SpriteComponent ).SetTexture( self.possibleTypeTextures[self.currentType] )
         
         mouse = self.core.input.mouse
         keyboard = self.core.input.keyboard
@@ -91,12 +99,15 @@ class Ground(ComponentEntity):
         self.AddComponent( StaticBody_Rectangular( self.size/2, self.position, self.rotation ) )
         self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture(r"media\ground.png"), self.size ) )
 
-app = GameCore(False, "Level Editing Demo", appSize.x, appSize.y, False)
+settings = Settings()
+settings.window_title = "Level Editing Demo"
+settings.display_size = appSize
+settings.enable_lmb_manipulation = True
+settings.enable_rmb_destruction = True
 
-app.renderer.window.framerate_limit = 60
+app = GameCore(settings)
 
-app.uiManager.AddEntity( FPS_Counter() )
-app.uiManager.AddEntity( DefaultText("S - Spawn single item\nX - Spawn multiple items\nN - Change item to spawn\nLMB - Manipulate objects\nMMB - Move camera\nRMB - Delete objects", (10, 90) ) )
+app.uiManager.AddEntity( DefaultText("S - Spawn single item\nX - Spawn multiple items\nN - Change item to spawn\nLMB - Manipulate objects\nMMB - Move camera\nRMB - Delete objects", (10, 90), Color(0, 0, 0) ) )
 
 app.entityManager.AddEntity( BackgroundImage( app.resourceManager.FetchTexture(r"media\background.jpg") ) )
 app.entityManager.AddEntity( CameraController() )

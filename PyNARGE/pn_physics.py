@@ -18,13 +18,14 @@ class PhysicsWorld(object):
         self.world.ClearForces()
         
         self.DoMouseQueries()
-        self.Debug_ProcessMouseJoints()
+
+        if self.core.settings.enable_lmb_manipulation:
+            self.Debug_ProcessMouseJoints()
 
     def GetEntityWithBody(self, body):
         return body.userData
     
     def DoMouseQueries(self):
-        self.deleteWithRMB = True
         mouse = self.core.input.mouse
         p = self.GlobalToWorld( self.core.input.GetMousePosition() )
         aabb = b2AABB(lowerBound=p-(0.001, 0.001), upperBound=p+(0.001, 0.001))
@@ -35,7 +36,7 @@ class PhysicsWorld(object):
             if( ent == None ):
                 return
             ent.OnMouseOver()
-            if self.deleteWithRMB and mouse.is_button_pressed( mouse.RIGHT ):
+            if self.core.settings.enable_rmb_destruction and mouse.is_button_pressed( mouse.RIGHT ):
                 self.core.entityManager.RemoveEntity(ent)
     
     def Debug_ProcessMouseJoints( self ):

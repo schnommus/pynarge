@@ -14,16 +14,12 @@ class Entity(object):
         self.steplayer = 0
         
     def _Init(self):
-        if self.core.debugInfo:
-            print str(type(self)) + " initialized with ID " + str(self.id)
         self.Init()
         
     def _Step(self):
         self.Step()
         
     def _Destroy(self):
-        if self.core.debugInfo:
-            print str(type(self)) + " destroyed " + str(self.id)
         self.Destroy()
         
     def _Draw(self):

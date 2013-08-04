@@ -18,12 +18,16 @@ class EntityManager(object):
         self.deletionList.append(ent.id)
 
     def ExecuteEntityDeletions(self):
-        for i in range( len( self.entities ) ):
-            if self.entities[i].id in self.deletionList:
-                self.entities[i]._Destroy()
-                self.core.idDispensor.FreeID(self.entities[i].id)
-                del self.entities[i]
-                break
+        deleting = True
+        while deleting: #Must do this to avoid array out-of-bounds
+            deleting = False
+            for i in range( len( self.entities ) ):
+                if self.entities[i].id in self.deletionList:
+                    self.entities[i]._Destroy()
+                    self.core.idDispensor.FreeID(self.entities[i].id)
+                    del self.entities[i]
+                    deleting = True
+                    break
         self.deletionList = []
     
     def RemoveEntityByID(self, the_id):

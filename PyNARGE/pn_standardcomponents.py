@@ -4,17 +4,18 @@ from pn_utils import Vec2
 from random import randint
 
 class TextComponent(Component):
-    def __init__(self, text, font=None, size=20, offset=Vec2(0,0)):
+    def __init__(self, text, font=None, size=20, color=Color.WHITE, offset=Vec2(0,0)):
         self.message = text
         self.offset = offset
         self.size = size
         self.font = font
+        self.color = color
     
     def Init(self):
         self.text = Text()
         self.text.font = self.core.resourceManager.FetchDefaultFont() if self.font==None else self.font
         self.text.character_size = self.size
-        self.text.color = Color.WHITE
+        self.text.color = self.color
 
     def SetText(self, message):
         self.message = message
@@ -27,7 +28,20 @@ class TextComponent(Component):
         self.core.renderer.Draw(self.text)
 
 class SpriteComponent(Component):
-    def __init__(self, texture, forcedSize=None, shaderPass=None):
+    def __init__(self, texture, forcedSize=None, shaderPass=None, offset=(0,0)):
+        self.sprite = Sprite(texture)
+        self.shaderPass = shaderPass
+        self.offset = Vec2(offset)
+        
+        if forcedSize != None:
+            forcedSize = Vec2(forcedSize)
+            self.sprite.scale(
+                ( float(forcedSize.x)/float(texture.size.x),
+                float(forcedSize.y)/float(texture.size.y) ) )
+            
+        self.sprite.origin = Vec2(texture.size)/2
+    
+    def SetTexture(self, texture, forcedSize=None, shaderPass=None):
         self.sprite = Sprite(texture)
         self.shaderPass = shaderPass
         
@@ -40,7 +54,7 @@ class SpriteComponent(Component):
         self.sprite.origin = Vec2(texture.size)/2
     
     def Draw(self):
-        self.sprite.position = self.entity.position
+        self.sprite.position = self.entity.position + self.offset
         self.sprite.rotation = -self.entity.rotation
         self.core.renderer.Draw(self.sprite, self.shaderPass)
 
@@ -83,9 +97,11 @@ class RespawnableComponent(Component):
         self.condition = condition
         
     def Step(self):
-        if self.condition(self.entity): # If object is offscreen
-            self.core.entityManager.AddEntity( type(self.entity)() ) # Spawn new object
+        if self.condition(self.entity):
             self.core.entityManager.RemoveEntity(self.entity) # Destroy self
+
+    def Destroy(self):
+        self.core.entityManager.AddEntity( type(self.entity)() ) # Spawn new object
 
 class AttractedToComponent(Component):
     def __init__(self, target=None, factor=1.0):

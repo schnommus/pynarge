@@ -19,13 +19,14 @@ class BackgroundImage(ComponentEntity):
 
 
 class DefaultText(ComponentEntity):
-    def __init__(self, text, position):
+    def __init__(self, text, position, color=Color.WHITE):
         ComponentEntity.__init__(self)
         self.text = text
         self.position = position
+        self.color = color
         
     def Build(self):
-        self.AddComponent( TextComponent(self.text) )
+        self.AddComponent( TextComponent(self.text, None, 20, self.color) )
 
 
 class WaterParticle(ComponentEntity):

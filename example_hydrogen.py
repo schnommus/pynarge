@@ -50,8 +50,9 @@ class GravityCenter(ComponentEntity):
         self.position = self.core.input.GetMousePosition()
 
 # PROGRAM BEGINS
-
-app = GameCore(False, "Hydrogen Demo")
+settings = Settings()
+settings.window_title = "Hydrogen Demo"
+app = GameCore(settings)
 
 grav = GravityCenter()
 app.entityManager.AddEntity( grav )
