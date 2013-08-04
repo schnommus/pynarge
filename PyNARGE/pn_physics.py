@@ -125,8 +125,8 @@ class StaticBody_Rectangular(PhysicsComponent):
         self.anglerad = 3.141*float(angle)/180.0
         
     def Init(self):
-        self.entity.position = self.position
-        self.entity.rotation = self.angledeg
+        self.position = self.entity.position
+        self.angledeg = self.entity.rotation
         self.size = self.core.physicsWorld.LocalToWorld(self.size)
         self.position = self.core.physicsWorld.GlobalToWorld(self.position)
         self.entity.body=self.core.physicsWorld.world.CreateStaticBody( position=self.position, angle=self.anglerad, shapes=b2PolygonShape(box=self.size) )

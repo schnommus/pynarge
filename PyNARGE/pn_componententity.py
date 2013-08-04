@@ -11,6 +11,7 @@ class ComponentEntity(Entity):
         self.components.append(component)
         component.core = self.core
         component.entity = self
+        return component
 
 ##        if self.core != None:
 ##            component.Init()

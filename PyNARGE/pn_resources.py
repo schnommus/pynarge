@@ -24,6 +24,12 @@ class Shader(sfml.Shader):
 class RenderStates(sfml.RenderStates):
     pass
 
+class SoundBuffer(sfml.SoundBuffer):
+    pass
+
+class Sound(sfml.Sound):
+    pass
+
 import os
 
 def EngineMediaDirectory():
