@@ -4,10 +4,14 @@ from pn_utils import *
 from pn_shader import *
 
 class EngineShaders(object):
+    """For getting instances to some standard engine shaders, usually the bottom of a :class:`PyNARGE.ShaderPass` stack"""
     def __init__(self, core):
         self.core = core
 
     def GetWaterShader(self):
+        """Returns the engine's 2D water shader as :class:`PyNARGE.ShaderPass`. See :class:`PyNARGE.WaterParticle` for an example usage.
+
+        :returns: :class:`ShaderPass` -- the shader instance"""
         # If the shader hasn't been used before, create ShaderPass stack; otherwise return the top pass for drawing too.
         if not hasattr(self, "_waterShader"):
             self._waterShader = self.core.renderer.AddShaderPass( ShaderPass( self.core.resourceManager.FetchShader(EngineMediaDirectory()+r"shaders\water_pass1.glsl") ) )

@@ -32,6 +32,9 @@ class Entity(object):
     def OnMouseOver(self):
         pass
 
+    def OnCollision(self, other):
+        pass
+
     def Init(self):
         pass
     def Step(self):

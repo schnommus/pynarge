@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to PyNARGE’s documentation! &mdash; PyNARGE 0.2a1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNARGE 0.2a1 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">PyNARGE 0.2a1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-pynarge-s-documentation">
+<h1>Welcome to PyNARGE&#8217;s documentation!<a class="headerlink" href="#welcome-to-pynarge-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<dl class="class">
+<dt id="PyNARGE.Component">
+<em class="property">class </em><tt class="descclassname">PyNARGE.</tt><tt class="descname">Component</tt><a class="headerlink" href="#PyNARGE.Component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class of components that can be added to entities</p>
+<dl class="method">
+<dt id="PyNARGE.Component.Destroy">
+<tt class="descname">Destroy</tt><big>(</big><big>)</big><a class="headerlink" href="#PyNARGE.Component.Destroy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called just before component is destroyed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyNARGE.Component.Draw">
+<tt class="descname">Draw</tt><big>(</big><big>)</big><a class="headerlink" href="#PyNARGE.Component.Draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called while the entity is being drawn</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyNARGE.Component.Init">
+<tt class="descname">Init</tt><big>(</big><big>)</big><a class="headerlink" href="#PyNARGE.Component.Init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called just after component creation: self.core, self.entity is set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyNARGE.Component.Step">
+<tt class="descname">Step</tt><big>(</big><big>)</big><a class="headerlink" href="#PyNARGE.Component.Step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called every frame</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyNARGE.ShaderPass">
+<em class="property">class </em><tt class="descclassname">PyNARGE.</tt><tt class="descname">ShaderPass</tt><big>(</big><em>shader</em>, <em>target=None</em><big>)</big><a class="headerlink" href="#PyNARGE.ShaderPass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows connection of <tt class="xref py py-class docutils literal"><span class="pre">Shader</span></tt> instances in &#8216;passes&#8217;, which eventually lead to the display</p>
+<dl class="method">
+<dt id="PyNARGE.ShaderPass.Draw">
+<tt class="descname">Draw</tt><big>(</big><em>ent</em><big>)</big><a class="headerlink" href="#PyNARGE.ShaderPass.Draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw something to the shader pass before processing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ent</strong> (<em>A Drawable object</em>) &#8211; Drawable to draw</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyNARGE.ShaderPass.Initialize">
+<tt class="descname">Initialize</tt><big>(</big><em>size</em><big>)</big><a class="headerlink" href="#PyNARGE.ShaderPass.Initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must be executed before the instance can be used.
+Internally called by <tt class="xref py py-class docutils literal"><span class="pre">Renderer</span></tt> after <tt class="xref py py-func docutils literal"><span class="pre">Renderer.AddShaderPass()</span></tt> is called.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> &#8211; Size of shader surface (almost always <tt class="xref py py-func docutils literal"><span class="pre">Renderer.GetWindowSize()</span></tt>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyNARGE.ShaderPass.SendToTarget">
+<tt class="descname">SendToTarget</tt><big>(</big><big>)</big><a class="headerlink" href="#PyNARGE.ShaderPass.SendToTarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes shader and draws surface to target</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyNARGE.ShaderPass.SetCenter">
+<tt class="descname">SetCenter</tt><big>(</big><em>position</em><big>)</big><a class="headerlink" href="#PyNARGE.ShaderPass.SetCenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Position of the shader&#8217;s source, target in global coords. Internally called
+by <tt class="xref py py-func docutils literal"><span class="pre">Renderer.SetCamera()</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>position</strong> (<tt class="xref py py-class docutils literal"><span class="pre">Vec2</span></tt>) &#8211; Shader&#8217;s new center</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyNARGE.ShaderPass.SetParameter">
+<tt class="descname">SetParameter</tt><big>(</big><em>parameter</em>, <em>value</em><big>)</big><a class="headerlink" href="#PyNARGE.ShaderPass.SetParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mechanism for setting a &#8216;uniform&#8217; GLSL shader variables</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>parameter</strong> (<em>str</em>) &#8211; Name of the GLSL variable</li>
+<li><strong>value</strong> (<em>float, int, vec2, etc</em>) &#8211; Value to set GLSL parameter too</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyNARGE.ShaderPass.SetTarget">
+<tt class="descname">SetTarget</tt><big>(</big><em>target</em><big>)</big><a class="headerlink" href="#PyNARGE.ShaderPass.SetTarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the shader&#8217;s target draw surface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>target</strong> (Either <tt class="xref py py-class docutils literal"><span class="pre">Renderer</span></tt> or <tt class="xref py py-class docutils literal"><span class="pre">ShaderPass</span></tt> instance) &#8211; Where this pass should draw to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyNARGE.EngineShaders">
+<em class="property">class </em><tt class="descclassname">PyNARGE.</tt><tt class="descname">EngineShaders</tt><big>(</big><em>core</em><big>)</big><a class="headerlink" href="#PyNARGE.EngineShaders" title="Permalink to this definition">¶</a></dt>
+<dd><p>For getting instances to some standard engine shaders, usually the bottom of a <a class="reference internal" href="#PyNARGE.ShaderPass" title="PyNARGE.ShaderPass"><tt class="xref py py-class docutils literal"><span class="pre">PyNARGE.ShaderPass</span></tt></a> stack</p>
+<dl class="method">
+<dt id="PyNARGE.EngineShaders.GetWaterShader">
+<tt class="descname">GetWaterShader</tt><big>(</big><big>)</big><a class="headerlink" href="#PyNARGE.EngineShaders.GetWaterShader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the engine&#8217;s 2D water shader as <a class="reference internal" href="#PyNARGE.ShaderPass" title="PyNARGE.ShaderPass"><tt class="xref py py-class docutils literal"><span class="pre">PyNARGE.ShaderPass</span></tt></a>. See <tt class="xref py py-class docutils literal"><span class="pre">PyNARGE.WaterParticle</span></tt> for an example usage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">ShaderPass</span></tt> &#8211; the shader instance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to PyNARGE&#8217;s documentation!</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">PyNARGE 0.2a1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Seb Holzapfel.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

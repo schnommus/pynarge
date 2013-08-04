@@ -8,7 +8,7 @@ class PhysicsWorld(object):
         self.mouseJoint = None
     
     def Initialize(self, physicsScale=32):
-        self.world = b2World(gravity=(0,-10))
+        self.world = b2World(gravity=(0,-10),contactListener=CollisionListener(self.core))
         self.physicsScale=physicsScale
         self.timeStep = 1.0 / 60
         self.vel_iters, self.pos_iters = 6, 2
@@ -16,8 +16,13 @@ class PhysicsWorld(object):
     def Update( self ):
         self.world.Step(self.timeStep, self.vel_iters, self.pos_iters)
         self.world.ClearForces()
+        
+        self.DoMouseQueries()
         self.Debug_ProcessMouseJoints()
 
+    def GetEntityWithBody(self, body):
+        return body.userData
+    
     def DoMouseQueries(self):
         self.deleteWithRMB = True
         mouse = self.core.input.mouse
@@ -26,17 +31,14 @@ class PhysicsWorld(object):
         query = fwQueryCallback(p)
         self.world.QueryAABB(query, aabb)
         if query.fixture:
-            body = query.fixture.body
-            for ent in self.core.entityManager.entities:
-                if hasattr(ent, "body") and ent.body == body:
-                    ent.OnMouseOver()
-                    if self.deleteWithRMB and mouse.is_button_pressed( mouse.RIGHT ):
-                        self.core.entityManager.RemoveEntity(ent)
-                    break
+            ent = self.GetEntityWithBody(query.fixture.body)
+            if( ent == None ):
+                return
+            ent.OnMouseOver()
+            if self.deleteWithRMB and mouse.is_button_pressed( mouse.RIGHT ):
+                self.core.entityManager.RemoveEntity(ent)
     
     def Debug_ProcessMouseJoints( self ):
-        self.DoMouseQueries()
-        
         mouse = self.core.input.mouse
         p = self.GlobalToWorld( self.core.input.GetMousePosition() )
         
@@ -79,6 +81,17 @@ class PhysicsWorld(object):
     def GlobalToWorld(self, coords):
         return Vec2((float(coords.x)-self.core.renderer.window.size.x/2)/self.physicsScale, (self.core.renderer.window.size.y/2-float(coords.y))/self.physicsScale)
 
+class CollisionListener(b2ContactListener):
+    def __init__(self, core):
+        b2ContactListener.__init__(self)
+        self.core = core
+    def BeginContact(self, contact):
+        ent1 = self.core.physicsWorld.GetEntityWithBody(contact.fixtureA.body)
+        ent2 = self.core.physicsWorld.GetEntityWithBody(contact.fixtureB.body)
+        ent1.OnCollision(ent2)
+        ent2.OnCollision(ent1)
+        
+
 
 # Used for mouse joint debugging
 class fwQueryCallback(b2QueryCallback):
@@ -116,6 +129,7 @@ class StaticBody_Rectangular(PhysicsComponent):
         self.size = self.core.physicsWorld.LocalToWorld(self.size)
         self.position = self.core.physicsWorld.GlobalToWorld(self.position)
         self.entity.body=self.core.physicsWorld.world.CreateStaticBody( position=self.position, angle=self.anglerad, shapes=b2PolygonShape(box=self.size) )
+        self.entity.body.userData = self.entity
         
 
 class RigidBody_Rectangular(PhysicsComponent):
@@ -132,6 +146,7 @@ class RigidBody_Rectangular(PhysicsComponent):
         self.body = self.core.physicsWorld.world.CreateDynamicBody(position=self.position)
         self.body.CreatePolygonFixture(box=self.size, density=self.density, friction=self.friction)
         self.entity.body = self.body
+        self.entity.body.userData = self.entity
 
     def Step(self):
         self.entity.rotation = 180*self.body.angle/3.1416
@@ -154,6 +169,7 @@ class RigidBody_Circular(PhysicsComponent):
         self.body = self.core.physicsWorld.world.CreateDynamicBody(position=self.position)
         self.body.CreateFixture(shape=b2CircleShape(radius=self.radius), density=self.density, friction=self.friction)
         self.entity.body = self.body
+        self.entity.body.userData = self.entity
 
     def Step(self):
         self.entity.rotation = 180*self.body.angle/3.1416

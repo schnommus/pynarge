@@ -5,6 +5,7 @@ class EntityManager(object):
     def __init__(self, core):
         self.entities = []
         self.core = core
+        self.deletionList = []
         
     def AddEntity(self, ent):
         ent.id = self.core.idDispensor.GetNewID()
@@ -14,19 +15,19 @@ class EntityManager(object):
         return ent
 
     def RemoveEntity(self, ent):
-        for i in range( len( self.entities ) ):
-            if self.entities[i] == ent:
-                self.entities[i]._Destroy()
-                del self.entities[i]
-                break
+        self.deletionList.append(ent.id)
 
-    def RemoveEntityByID(self, the_id):
+    def ExecuteEntityDeletions(self):
         for i in range( len( self.entities ) ):
-            if self.entities[i].id == the_id:
+            if self.entities[i].id in self.deletionList:
                 self.entities[i]._Destroy()
-                self.core.idDispensor.FreeID(the_id)
+                self.core.idDispensor.FreeID(self.entities[i].id)
                 del self.entities[i]
                 break
+        self.deletionList = []
+    
+    def RemoveEntityByID(self, the_id):
+        self.deletionList.append(the_id)
 
     def GetEntityWithID(self, the_id):
         for i in range( len( self.entities ) ):
@@ -37,6 +38,7 @@ class EntityManager(object):
         self.entities.sort(key=operator.attrgetter('steplayer'))
         for ent in self.entities:
             ent._Step()
+        self.ExecuteEntityDeletions()
 
     def DrawEntities(self):
         self.entities.sort(key=operator.attrgetter('drawlayer'))

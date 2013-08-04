@@ -10,7 +10,12 @@ class CameraController(ComponentEntity):
         self.currentPosition = None
         
     def Step(self):
+        keyboard = self.core.input.keyboard
         mouse = self.core.input.mouse
+
+        if keyboard.is_key_pressed( keyboard.EQUAL ):
+            self.core.renderer.cameraView.zoom(1.0+0.1*self.core.time.GetDelta())
+        
         if mouse.is_button_pressed( mouse.MIDDLE ):
             self.currentPosition = self.core.input.GetMousePositionUI()
             if not self.lastPosition ==  None:
@@ -76,6 +81,10 @@ class Stone(ComponentEntity):
     def Build(self):
         self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture(r"media\circle.png") ) )
         self.AddComponent( RigidBody_Circular(20, self.position) )
+        
+    def OnCollision(self, other):
+        if type(other) != Ground and type(other) != Stone:
+            self.core.entityManager.RemoveEntity(other)
 
 class Ground(ComponentEntity):
     def Build(self):
