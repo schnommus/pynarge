@@ -35,9 +35,9 @@ class ComponentEntity(Entity):
         self.Init()
         
     def _Step(self):
+        self.Step()
         for component in self.components:
             component.Step()
-        self.Step()
         
     def _Destroy(self):
         for component in self.components:
@@ -45,7 +45,7 @@ class ComponentEntity(Entity):
         self.Destroy()
         
     def _Draw(self):
+        self.Draw()
         for component in self.components:
             component.Draw()
-        self.Draw()
 

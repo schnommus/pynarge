@@ -30,6 +30,9 @@ class SoundBuffer(sfml.SoundBuffer):
 class Sound(sfml.Sound):
     pass
 
+class RectangleShape(sfml.RectangleShape):
+    pass
+
 import os
 
 def EngineMediaDirectory():

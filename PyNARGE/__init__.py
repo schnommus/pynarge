@@ -6,3 +6,4 @@ from pn_physics import *
 from pn_shader import *
 from pn_standardentities import *
 from pn_settings import *
+from pn_gui import *
