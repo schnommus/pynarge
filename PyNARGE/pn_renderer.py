@@ -33,6 +33,7 @@ class Renderer(object):
         self.window.view = self.uiView
     
     def AddShaderPass( self, shaderpass ):
+        """Add a shader pass to the engine"""
         shaderpass.core = self.core
         shaderpass.Initialize( self.size )
         self.shaderpasses.append( shaderpass )
@@ -45,11 +46,18 @@ class Renderer(object):
             shaderpass.Draw(ent)
 
     def SetCameraPosition( self, position ):
+        """Set the camera's position in world coordinates
+
+        :param position: The camera's position
+        :type position: :class:`PyNARGE.Vec2`"""
         self.cameraView.center = Vec2(position)
         for p in self.shaderpasses:
             p.SetCenter(position)
 
     def GetCameraPosition( self ):
+        """Get the camera's position in world coordinates
+
+        :returns: :class:`PyNARGE.Vec2` - The camera's position"""
         return Vec2( self.cameraView.center )
 
     def DrawShaders( self ):
@@ -66,4 +74,7 @@ class Renderer(object):
         self.window.clear(sfml.Color(0, 0, 0))
 
     def GetWindowSize(self):
+        """Get the application's window resolution
+
+        :returns: :class:`PyNARGE.Vec2` - the current resolution"""
         return self.size

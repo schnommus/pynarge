@@ -5,7 +5,16 @@ from pn_resources import *
 
 
 class GUI_Dialog(ComponentEntity):
+    """A dialogue box, for hosting other GUI elements"""
     def __init__(self, name = "UntitledDialogue", size=Vec2(150, 100), position=Vec2(0, 0)):
+        """Constructor
+
+        :param name: The title to display at the top of the dialog
+        :type name: str
+        :param size: The size of the dialog, including the title bar
+        :type size: :class:`PyNARGE.Vec2`
+        :param position: Coordinates of top-left corner of dialog, on screen
+        :type position: :class:`PyNARGE.Vec2`"""
         ComponentEntity.__init__(self)
         self.name = name
         self.size = Vec2(size)
@@ -69,7 +78,19 @@ class GUI_Dialog(ComponentEntity):
         self.core.renderer.Draw(self.titlebar_rectangle)
 
 class GUI_Button(ComponentEntity):
+    """A Button, GUI element for adding to a Dialog. Supports the calling of external functions on click events"""
     def __init__(self, parent, name = "UntitledButton", size=Vec2(70, 30), offset=Vec2(0, 0), function=None):
+        """Constructor
+
+        :param parent: The dialogue that the button will be added to
+        :type parent: :class:`PyNARGE.GUI_Dialog`
+        :param name: The text to display inside the button
+        :type name: str
+        :param size: The size of the button
+        :type size: :class:`PyNARGE.Vec2`
+        :param offset: Coordinates of top-left corner of the button, relative to its parent dialog
+        :type offset: :class:`PyNARGE.Vec2`
+        :param function: A function to be called when the button is clicked"""
         ComponentEntity.__init__(self)
         self.name = name
         self.size = Vec2(size)

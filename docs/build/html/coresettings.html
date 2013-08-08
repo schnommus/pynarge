@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GameCore &amp; Settings &mdash; PyNARGE 0.2a1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNARGE 0.2a1 documentation" href="index.html" />
+    <link rel="prev" title="PyNARGE" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="PyNARGE"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyNARGE 0.2a1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gamecore-settings">
+<h1>GameCore &amp; Settings<a class="headerlink" href="#gamecore-settings" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>PyNARGE applications are generally created by supplying a <cite>GameCore</cite> constructor with a <cite>Settings</cite> instance, adding
+some entities to the <cite>GameCore</cite>, and then calling <cite>GameCore.Run()</cite>. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Set some options</span>
+<span class="n">settings</span> <span class="o">=</span> <span class="n">Settings</span><span class="p">()</span>
+<span class="n">settings</span><span class="o">.</span><span class="n">display_size</span> <span class="o">=</span> <span class="n">Vec2</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+
+<span class="c"># Create an app with the options</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">GameCore</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+
+<span class="c"># Add an entity</span>
+<span class="n">app</span><span class="o">.</span><span class="n">entityManager</span><span class="o">.</span><span class="n">AddEntity</span><span class="p">(</span> <span class="n">SomeEntity</span><span class="p">()</span> <span class="p">)</span>
+
+<span class="c"># Begin the main loop</span>
+<span class="n">app</span><span class="o">.</span><span class="n">Run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx doesn&#8217;t like documenting my initial values for some reason &#8211; check <cite>pn_settings.py</cite> to find default values that <cite>Settings</cite> will use. In short, &#8220;PyNARGE Window&#8221; at 800x600, windowed.</p>
+<dl class="class">
+<dt id="PyNARGE.Settings">
+<em class="property">class </em><tt class="descclassname">PyNARGE.</tt><tt class="descname">Settings</tt><a class="headerlink" href="#PyNARGE.Settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores settings for passing to a GameCore</p>
+<dl class="attribute">
+<dt id="PyNARGE.Settings.antialiasing">
+<tt class="descname">antialiasing</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.Settings.antialiasing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable 8x antialiasing</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.Settings.display_fps">
+<tt class="descname">display_fps</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.Settings.display_fps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show an FPS counter top-left of screen</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.Settings.display_fullscreen">
+<tt class="descname">display_fullscreen</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.Settings.display_fullscreen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should the application run fullscreen</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.Settings.display_size">
+<tt class="descname">display_size</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.Settings.display_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolution of the display</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.Settings.enable_lmb_manipulation">
+<tt class="descname">enable_lmb_manipulation</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.Settings.enable_lmb_manipulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables physics interaction with left mouse button</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.Settings.enable_rmb_destruction">
+<tt class="descname">enable_rmb_destruction</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.Settings.enable_rmb_destruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables destruction of physics entities with right mouse button</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.Settings.label_entity_types">
+<tt class="descname">label_entity_types</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.Settings.label_entity_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Label entities with underlying class type</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.Settings.limit_framerate">
+<tt class="descname">limit_framerate</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.Settings.limit_framerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits framerate to 60FPS. Required when using physics subsystem because changing timestep is unstable</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.Settings.window_title">
+<tt class="descname">window_title</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.Settings.window_title" title="Permalink to this definition">¶</a></dt>
+<dd><p>The title of the window</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyNARGE.GameCore">
+<em class="property">class </em><tt class="descclassname">PyNARGE.</tt><tt class="descname">GameCore</tt><big>(</big><em>settings</em><big>)</big><a class="headerlink" href="#PyNARGE.GameCore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Engine host - sets up game subsystems, runs the application, does cleanup.</p>
+<dl class="method">
+<dt id="PyNARGE.GameCore.Run">
+<tt class="descname">Run</tt><big>(</big><big>)</big><a class="headerlink" href="#PyNARGE.GameCore.Run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call to run the engine: initial entities should be added before this is called</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.GameCore.engineShaders">
+<tt class="descname">engineShaders</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.GameCore.engineShaders" title="Permalink to this definition">¶</a></dt>
+<dd><p>For getting default shaders &amp; passes</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.GameCore.entityManager">
+<tt class="descname">entityManager</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.GameCore.entityManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entity management subsystem for game entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.GameCore.input">
+<tt class="descname">input</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.GameCore.input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input subsystem</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.GameCore.physicsWorld">
+<tt class="descname">physicsWorld</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.GameCore.physicsWorld" title="Permalink to this definition">¶</a></dt>
+<dd><p>Physics subsystem</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.GameCore.renderer">
+<tt class="descname">renderer</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.GameCore.renderer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rendering subsystem</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.GameCore.resourceManager">
+<tt class="descname">resourceManager</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.GameCore.resourceManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resource managing subsystem</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.GameCore.settings">
+<tt class="descname">settings</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.GameCore.settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>The games&#8217;s settings</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.GameCore.time">
+<tt class="descname">time</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.GameCore.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utilitiy class for delta time etc.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyNARGE.GameCore.uiManager">
+<tt class="descname">uiManager</tt><em class="property"> = None</em><a class="headerlink" href="#PyNARGE.GameCore.uiManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entity management subsystem for UI</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">GameCore &amp; Settings</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#api">API</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">PyNARGE</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/coresettings.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="PyNARGE"
+             >previous</a> |</li>
+        <li><a href="index.html">PyNARGE 0.2a1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Seb Holzapfel.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>PyNARGE &mdash; PyNARGE 0.2a1 documentation</title>
+    <title>Welcome to PyNARGE’s documentation! &mdash; PyNARGE 0.2a1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,8 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PyNARGE 0.2a1 documentation" href="#" />
-    <link rel="next" title="GameCore &amp; Settings" href="coresettings.html" /> 
+    <link rel="top" title="PyNARGE 0.2a1 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,10 +35,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="coresettings.html" title="GameCore &amp; Settings"
-             accesskey="N">next</a> |</li>
-        <li><a href="#">PyNARGE 0.2a1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyNARGE 0.2a1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -48,78 +44,43 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="pynarge">
-<h1>PyNARGE<a class="headerlink" href="#pynarge" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="an-overview">
-<h2>An Overview<a class="headerlink" href="#an-overview" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><a class="reference internal image-reference" href="_images/screenshot1.jpg"><img alt="_images/screenshot1.jpg" class="align-center" src="_images/screenshot1.jpg" style="width: 600px; height: 350px;" /></a>
-<p>PyNARGE (or Python&#8217;s Not A Real Game Engine) is a slightly more abstract 2D game
-engine than what I&#8217;ve seen around in the Python world today: it supports physics,
-some default shaders (i.e water, blurring, pixellation), GUI elements, entity management, component-based entities
-and a bunch of other stuff straight off the bat.</p>
-</div></blockquote>
-</div>
-<div class="section" id="using-the-engine">
-<h2>Using The Engine<a class="headerlink" href="#using-the-engine" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>PyNARGE&#8217;s API has been designed to get a functioning application up and running as quickly as possible. For example, the following code
-will open a window, load images for a crate, treat it as a physics entity, set a static background &amp; display some info text.
-The crate will respawn if it falls offscreen; allowing the player another chance to catch it with the mouse if they&#8217;re too slow:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">PyNARGE</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="c"># Create a new entity type</span>
-<span class="k">class</span> <span class="nc">Crate</span><span class="p">(</span><span class="n">ComponentEntity</span><span class="p">):</span>
-        <span class="c"># To build this entity</span>
-        <span class="k">def</span> <span class="nf">Build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="c"># Assign a sprite</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">AddComponent</span><span class="p">(</span> <span class="n">SpriteComponent</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">resourceManager</span><span class="o">.</span><span class="n">FetchTexture</span><span class="p">(</span><span class="s">&quot;media</span><span class="se">\\</span><span class="s">crate.png&quot;</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
-
-                <span class="c"># Adds physics to this entity</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">AddComponent</span><span class="p">(</span> <span class="n">RigidBody_Rectangular</span><span class="p">(</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
-
-                <span class="c"># Respawn when offscreen</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">AddComponent</span><span class="p">(</span> <span class="n">RespawnableComponent</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">900</span> <span class="p">)</span> <span class="p">)</span>
-
-        <span class="c"># Every frame</span>
-        <span class="k">def</span> <span class="nf">Step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="c"># Spit out some details to the console</span>
-                <span class="k">print</span> <span class="s">&quot;I am a crate @ &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
-
-<span class="c"># Set some options</span>
-<span class="n">settings</span> <span class="o">=</span> <span class="n">Settings</span><span class="p">()</span>
-<span class="n">settings</span><span class="o">.</span><span class="n">display_size</span> <span class="o">=</span> <span class="n">Vec2</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
-<span class="n">settings</span><span class="o">.</span><span class="n">enable_lmb_manipulation</span> <span class="o">=</span> <span class="bp">True</span>
-
-<span class="c"># Create an app with the options</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">GameCore</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
-
-<span class="c"># Add some text, a background image and finally an instance of our crate</span>
-<span class="n">app</span><span class="o">.</span><span class="n">uiManager</span><span class="o">.</span><span class="n">AddEntity</span><span class="p">(</span> <span class="n">DefaultText</span><span class="p">(</span><span class="s">&quot;The cube shall fall off the screen unless you catch it!&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">entityManager</span><span class="o">.</span><span class="n">AddEntity</span><span class="p">(</span> <span class="n">BackgroundImage</span><span class="p">(</span> <span class="n">app</span><span class="o">.</span><span class="n">resourceManager</span><span class="o">.</span><span class="n">FetchTexture</span><span class="p">(</span><span class="s">&quot;media</span><span class="se">\\</span><span class="s">background.jpg&quot;</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">entityManager</span><span class="o">.</span><span class="n">AddEntity</span><span class="p">(</span> <span class="n">Crate</span><span class="p">()</span> <span class="p">)</span>
-
-<span class="c"># Begin the main loop</span>
-<span class="n">app</span><span class="o">.</span><span class="n">Run</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Currently, the best way to learn how to use PyNARGE is to read the API docs and example code available.
-If there&#8217;s enough interest, a tutorial series may well be incoming!</p>
-</div></blockquote>
-</div>
-<div class="section" id="the-api">
-<h2>The API<a class="headerlink" href="#the-api" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="coresettings.html">GameCore &amp; Settings</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="coresettings.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="coresettings.html#api">API</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="coresettings.html#indices-and-tables">Indices and tables</a></li>
+  <div class="section" id="welcome-to-pynarge-s-documentation">
+<h1>Welcome to PyNARGE&#8217;s documentation!<a class="headerlink" href="#welcome-to-pynarge-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul class="simple">
 </ul>
 </div>
+<dl class="class">
+<dt id="PyNARGE.Component">
+<em class="property">class </em><tt class="descclassname">PyNARGE.</tt><tt class="descname">Component</tt><a class="headerlink" href="#PyNARGE.Component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class of components that can be added to entities</p>
+<dl class="method">
+<dt id="PyNARGE.Component.Destroy">
+<tt class="descname">Destroy</tt><big>(</big><big>)</big><a class="headerlink" href="#PyNARGE.Component.Destroy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called just before component is destroyed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyNARGE.Component.Draw">
+<tt class="descname">Draw</tt><big>(</big><big>)</big><a class="headerlink" href="#PyNARGE.Component.Draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called while the entity is being drawn</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyNARGE.Component.Init">
+<tt class="descname">Init</tt><big>(</big><big>)</big><a class="headerlink" href="#PyNARGE.Component.Init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called just after component creation: self.core, self.entity is set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyNARGE.Component.Step">
+<tt class="descname">Step</tt><big>(</big><big>)</big><a class="headerlink" href="#PyNARGE.Component.Step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called every frame</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="PyNARGE.ShaderPass">
 <em class="property">class </em><tt class="descclassname">PyNARGE.</tt><tt class="descname">ShaderPass</tt><big>(</big><em>shader</em>, <em>target=None</em><big>)</big><a class="headerlink" href="#PyNARGE.ShaderPass" title="Permalink to this definition">¶</a></dt>
@@ -276,8 +237,6 @@ by <tt class="xref py py-func docutils literal"><span class="pre">pyNARGE.Render
 
 </dd></dl>
 
-</div></blockquote>
-</div>
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
@@ -294,25 +253,17 @@ by <tt class="xref py py-func docutils literal"><span class="pre">pyNARGE.Render
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">PyNARGE</a><ul>
-<li><a class="reference internal" href="#an-overview">An Overview</a></li>
-<li><a class="reference internal" href="#using-the-engine">Using The Engine</a></li>
-<li><a class="reference internal" href="#the-api">The API</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#">Welcome to PyNARGE&#8217;s documentation!</a><ul>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
-  <h4>Next topic</h4>
-  <p class="topless"><a href="coresettings.html"
-                        title="next chapter">GameCore &amp; Settings</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/index.txt"
+    <li><a href="_sources/overview.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -341,10 +292,7 @@ by <tt class="xref py py-func docutils literal"><span class="pre">pyNARGE.Render
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="coresettings.html" title="GameCore &amp; Settings"
-             >next</a> |</li>
-        <li><a href="#">PyNARGE 0.2a1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyNARGE 0.2a1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -3,14 +3,14 @@ from pn_resourcemanager import *
 from pn_utils import *
 
 class ShaderPass(object):
-    """Allows connection of :class:`Shader` instances in 'passes', which eventually lead to the display"""
+    """Allows connection of :class:`pyNARGE.Shader` instances in 'passes', which eventually lead to the display"""
     def __init__(self, shader, target=None):
         """Constructor
 
         :param shader: Pixel shader to be represented by this pass
-        :type shader: :class:`Shader`
+        :type shader: :class:`pyNARGE.Shader`
         :param target: Where this pass should draw to
-        :type target: Either :class:`Renderer` or :class:`ShaderPass` instance"""
+        :type target: Either :class:`pyNARGE.Renderer` or :class:`pyNARGE.ShaderPass` instance"""
         self.shader = shader
         self.core = None
         self.target = target
@@ -22,15 +22,15 @@ class ShaderPass(object):
         """Change the shader's target draw surface
 
         :param target: Where this pass should draw to
-        :type target: Either :class:`Renderer` or :class:`ShaderPass` instance"""
+        :type target: Either :class:`pyNARGE.Renderer` or :class:`pyNARGE.ShaderPass` instance"""
         self.target = target
 
     def SetCenter(self, position):
         """Position of the shader's source, target in global coords. Internally called
-        by :func:`Renderer.SetCamera`.
+        by :func:`pyNARGE.Renderer.SetCamera`.
 
         :param position: Shader's new center
-        :type position: :class:`Vec2`"""
+        :type position: :class:`pyNARGE.Vec2`"""
         self.renderTexture.view.center = Vec2(position)
 
     def SetParameter(self, parameter, value):
@@ -44,9 +44,9 @@ class ShaderPass(object):
     
     def Initialize(self, size):
         """Must be executed before the instance can be used.
-        Internally called by :class:`Renderer` after :func:`Renderer.AddShaderPass` is called.
+        Internally called by :class:`pyNARGE.Renderer` after :func:`pyNARGE.Renderer.AddShaderPass` is called.
 
-        :param size: Size of shader surface (almost always :func:`Renderer.GetWindowSize`)
+        :param size: Size of shader surface (almost always :func:`pyNARGE.Renderer.GetWindowSize`)
         :type parameter: Vec2
         """
         self.shaderLoaded = Shader.is_available()

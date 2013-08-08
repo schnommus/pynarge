@@ -10,27 +10,32 @@ from pn_debug import FPS_Counter
 from pn_settings import Settings
 
 class GameCore(object):
-    def __init__(self, settings = Settings() ):
+    """Engine host - sets up game subsystems, runs the application, does cleanup."""
+    def __init__(self, settings ):
+        """Constructor
+
+        :param settings: Settings to apply to the engine
+        :type settings: :class:`PyNARGE.Settings`"""
         print "Initializing core engine components..."
 
-        self.settings = settings
+        self.settings = settings #: The games's settings
         
-        self.renderer = Renderer(self)
+        self.renderer = Renderer(self) #: Rendering subsystem
         self.renderer.Initialize(settings.window_title, settings.display_size.x, settings.display_size.y, settings.display_fullscreen, settings.antialiasing)
 
-        self.resourceManager = ResourceManager()
-        self.input = Input(self)
+        self.resourceManager = ResourceManager() #: Resource managing subsystem
+        self.input = Input(self) #: Input subsystem
 
-        self.engineShaders = EngineShaders(self)
-
-        self.physicsWorld = PhysicsWorld(self)
+        self.engineShaders = EngineShaders(self) #: For getting default shaders & passes
+ 
+        self.physicsWorld = PhysicsWorld(self) #: Physics subsystem
         self.physicsWorld.Initialize()
         
         self.idDispensor = IdDispensor()
-        self.uiManager = EntityManager(self)
-        self.entityManager = EntityManager(self)
+        self.uiManager = EntityManager(self) #: Entity management subsystem for UI
+        self.entityManager = EntityManager(self) #: Entity management subsystem for game entities
 
-        self.time = Time()
+        self.time = Time() #: Utilitiy class for delta time etc.
 
         self.isRunning = False
 
@@ -38,6 +43,7 @@ class GameCore(object):
             self.uiManager.AddEntity( FPS_Counter() )
 
     def Run(self):
+        """Call to run the engine: initial entities should be added before this is called"""
         self.renderer.AlignShaders()
         
         self.isRunning = True
