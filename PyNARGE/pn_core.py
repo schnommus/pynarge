@@ -8,6 +8,7 @@ from pn_physics import PhysicsWorld
 from pn_engineshaders import EngineShaders
 from pn_debug import FPS_Counter
 from pn_settings import Settings
+from pn_networking import *
 
 class GameCore(object):
     """Engine host - sets up game subsystems, runs the application, does cleanup."""
@@ -35,6 +36,8 @@ class GameCore(object):
         self.uiManager = EntityManager(self) #: Entity management subsystem for UI
         self.entityManager = EntityManager(self) #: Entity management subsystem for game entities
 
+        self.networking = Networking(self)
+
         self.time = Time() #: Utilitiy class for delta time etc.
 
         self.isRunning = False
@@ -55,6 +58,9 @@ class GameCore(object):
             self.entityManager.UpdateEntities()
 
             self.uiManager.UpdateEntities()
+
+            if self.networking.initialized:
+                self.networking.Update()
 
             self.renderer.SetViewToCamera()
             

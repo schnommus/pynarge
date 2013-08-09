@@ -22,3 +22,5 @@ PyNARGE/pn_settings.pyc
 levelcode.pyc
 example_leveleditor.pyc
 PyNARGE/pn_gui.pyc
+PyNARGE/pn_networking.pyc
+PyNARGE/pn_network_packets.pyc

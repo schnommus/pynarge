@@ -3,7 +3,7 @@ from pn_utils import *
 class Settings(object):
     """Stores settings for passing to a GameCore"""
     def __init__(self):
-        self.window_title = "PyNARGE Window" #: The title of the window
+        self.window_title = "PyNARGE Window" #: The title of the application window
         self.display_size = Vec2(800, 600) #: Resolution of the display
         self.display_fps = True #: Show an FPS counter top-left of screen
         self.label_entity_types = False #: Label entities with underlying class type

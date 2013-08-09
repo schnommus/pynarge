@@ -39,6 +39,11 @@ class EntityManager(object):
                     deleting = True
                     break
         self.deletionList = []
+
+    def Clean(self):
+        """Removes all entities in the manager"""
+        for ent in self.entities:
+            self.RemoveEntity(ent)
     
     def RemoveEntityByID(self, the_id):
         """Remove an entity from the entity manager, by searching for a matching ID"""
