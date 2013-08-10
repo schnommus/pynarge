@@ -2,6 +2,14 @@ from PyNARGE import *
 import random
 import math
 
+import sys
+##
+##def trace(frame, event, arg):
+##    print "%s, %s:%d" % (event, frame.f_code.co_filename, frame.f_lineno)
+##    return trace
+##
+##sys.settrace(trace)
+
 appSize = Vec2(800, 600)
 
 def OffscreenCondition( ent ):
@@ -13,6 +21,15 @@ class Crate(ComponentEntity):
         self.AddComponent( RigidBody_Rectangular((16, 16), (random.randint(200,appSize.x-200), (random.randint(-400, -100))) ) )
         self.AddComponent( RespawnableComponent( OffscreenCondition ) )
 
+class MouseVisualizer(ComponentEntity):
+    def Build(self):
+        self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture("media\\crate.png") ) )
+
+    def Step(self):
+        if len(self.core.networking.clients)>0:
+            self.position = self.core.networking.clients[0].mouseposition
+
+        
 class Stone(ComponentEntity):
     def Build(self):
         self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture("media\\circle.png") ) )
@@ -60,6 +77,8 @@ class CameraController(ComponentEntity):
 def SpawnStuff(app):
     app.uiManager.Clean()
     app.entityManager.Clean()
+
+    app.entityManager.AddEntity( MouseVisualizer() )
 
     app.entityManager.AddEntity( BackgroundImage( app.resourceManager.FetchTexture("media\\background.jpg") ) )
     
