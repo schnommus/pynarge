@@ -20,6 +20,7 @@ class Crate(ComponentEntity):
         self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture("media\\crate.png") ) )
         self.AddComponent( RigidBody_Rectangular((16, 16), (random.randint(200,appSize.x-200), (random.randint(-400, -100))) ) )
         self.AddComponent( RespawnableComponent( OffscreenCondition ) )
+        self.networked = True
 
 class MouseVisualizer(ComponentEntity):
     def Build(self):
@@ -27,7 +28,7 @@ class MouseVisualizer(ComponentEntity):
 
     def Step(self):
         if len(self.core.networking.clients)>0:
-            self.position = self.core.networking.clients[0].mouseposition
+            self.position = self.core.networking.clients[0].mouse_position
 
         
 class Stone(ComponentEntity):
@@ -35,6 +36,7 @@ class Stone(ComponentEntity):
         self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture("media\\circle.png") ) )
         self.AddComponent( RigidBody_Circular(20, (random.randint(200, appSize.x-200), (random.randint(-400, -100))) ) )
         self.AddComponent( RespawnableComponent( OffscreenCondition ) )
+        self.networked = True
 
 class Ground(ComponentEntity):
     def Build(self):

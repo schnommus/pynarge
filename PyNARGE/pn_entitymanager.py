@@ -10,6 +10,7 @@ class EntityManager(object):
         self.entities = []
         self.core = core
         self.deletionList = []
+        self.types = {}
         
     def AddEntity(self, ent):
         """Add an entity to the entity manager, initializing the entity
@@ -21,7 +22,18 @@ class EntityManager(object):
         ent.core = self.core
         self.entities.append(ent)
         ent._Init()
+        self.types[str(type(ent).__name__)] = type(ent)
         return ent
+
+    def AddForcedEntity(self, typestring, ent_id, position):
+        ent = self.types[typestring]()
+        ent.id = ent_id
+        ent.position = position
+        ent.core = self.core
+        self.entities.append(ent)
+        ent._Init()
+        return ent
+        
 
     def RemoveEntity(self, ent):
         """Remove an entity from the entity manager"""
@@ -56,6 +68,8 @@ class EntityManager(object):
         for i in range( len( self.entities ) ):
             if self.entities[i].id == the_id:
                 return self.entities[i]
+
+        return None
 
     def UpdateEntities(self):
         self.entities.sort(key=operator.attrgetter('steplayer'))

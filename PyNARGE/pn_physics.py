@@ -18,6 +18,7 @@ class PhysicsWorld(object):
         self.world.ClearForces()
         
         self.DoMouseQueries()
+        self.ServerMouseJoints()
 
         if self.core.settings.enable_lmb_manipulation:
             self.Debug_ProcessMouseJoints()
@@ -66,6 +67,35 @@ class PhysicsWorld(object):
             if self.mouseJoint:
                 self.world.DestroyJoint(self.mouseJoint)
                 self.mouseJoint = None
+                
+    def ServerMouseJoints(self):
+        if self.core.networking.connected and self.core.networking.is_server:
+            for clientdata in self.core.networking.clients:
+                p = self.GlobalToWorld(clientdata.mouse_position)
+                if clientdata.mouse_down:
+                    if self.mouseJoint != None:
+                        self.mouseJoint.target = p
+                        return
+
+                    aabb = b2AABB(lowerBound=p-(0.001, 0.001), upperBound=p+(0.001, 0.001))
+
+                    query = fwQueryCallback(p)
+                    self.world.QueryAABB(query, aabb)
+                    
+                    if query.fixture:
+                        body = query.fixture.body
+                        self.mouseJoint = self.world.CreateMouseJoint(
+                                bodyA=self.world.CreateStaticBody(),
+                                bodyB=body, 
+                                target=p,
+                                maxForce=1000.0*body.mass)
+                        body.awake = True
+
+                else:
+                    if self.mouseJoint:
+                        self.world.DestroyJoint(self.mouseJoint)
+                        self.mouseJoint = None
+                
         
     def GetWindowSize(self):
         return self.size

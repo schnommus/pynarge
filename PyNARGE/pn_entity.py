@@ -20,6 +20,8 @@ class Entity(object):
         self.size = Vec2(size)
         self.drawlayer = 0
         self.steplayer = 0
+        self.networked = False
+        self.spawned_by_server = False
         
     def _Init(self):
         self.Init()

@@ -7,7 +7,8 @@ PORT = 50001
 class ClientData(object):
     def __init__(self, my_id):
         self.id = my_id
-        self.mouse_position = None
+        self.mouse_position = Vec2(0, 0)
+        self.mouse_down = False
 
 class Networking(object):
     """Handles networking - synchronization, events between client and server"""
@@ -35,6 +36,8 @@ class Networking(object):
 
         self.is_server = True
 
+        self.world_packet_timer = 0.0
+
     def InitializeAsClient(self, ip_address):
         ip = sf.IpAddress.from_string(ip_address)
 
@@ -48,25 +51,41 @@ class Networking(object):
 
         self.initialized = True
 
+    def DestroyNonServerEntities(self):
+        for ent in self.core.entityManager.entities:
+            if ent.networked and not ent.spawned_by_server:
+                self.core.entityManager.RemoveEntity(ent)
+    
     def UpdateAsClient(self):
+        self.DestroyNonServerEntities()
+        
         try:
-            self.socket_to_server.send( str( MouseUpdatePacket( self.core.input.GetMousePosition()) ) )
-            
-            p = Packet.FromString( self.socket_to_server.receive(1024) )
-            if type(p) == ClientAllocationPacket:
-                self.client_id = p.assignedid
-                self.connected = True
-                print "Connected to server at " + str( self.socket_to_server.remote_address ) + ", my assigned ID is " + str(self.client_id)
-                
-        except sf.SocketNotReady:
-            pass #Waiting for data
+            mouse = self.core.input.mouse
+            self.socket_to_server.send( str( ClientUpdatePacket( self.core.input.GetMousePosition(), mouse.is_button_pressed( mouse.LEFT ) ) ) )
+        except sf.SocketError:
+            pass #Maybe socket wasn't ready
 
-        except sf.SocketDisconnected, sf.SocketError:
+        getting_packets = True
+        while getting_packets:
+            try:
+                p = Packet.FromString( self.socket_to_server.receive(1024) )
+                if type(p) == ClientAllocationPacket:
+                    self.client_id = p.assignedid
+                    self.connected = True
+                    print "Connected to server at " + str( self.socket_to_server.remote_address ) + ", my assigned ID is " + str(self.client_id)
+                elif type(p) == WorldUpdatePacket:
+                    p.Apply(self.core)
+                    
+            except sf.SocketNotReady:
+                getting_packets = False #Waiting for data
+
+            except sf.SocketDisconnected, sf.SocketError:
                 print "Disconnected from server!"
                 self.initialized = False
                 self.connected = False
                 if self.on_disconnected:
                     self.on_disconnected( self.core )
+                getting_packets = False
 
     def UpdateAsServer(self):
         try:
@@ -80,26 +99,40 @@ class Networking(object):
         except (sf.SocketDisconnected, sf.SocketNotReady, sf.SocketError):
             pass #Weren't any new connections to accept
 
+        self.world_packet_timer += self.core.time.GetDelta()
+        #Do world updates
+        if( self.world_packet_timer >= 1.0 ):
+            outpacket = WorldUpdatePacket()
+            outpacket.Create(self.core)
+            for clientid in self.client_sockets.keys():
+                try:
+                    self.client_sockets[clientid].send( str( outpacket ) )
+                except (sf.SocketDisconnected, sf.SocketNotReady, sf.SocketError):
+                    pass #Weren't any new connections to accept
+            self.world_packet_timer = 0.0
+        
         for clientid in self.client_sockets.keys():
-            try:
-                p = Packet.FromString( self.client_sockets[clientid].receive(1024) )
-                if type(p) == MouseUpdatePacket:
-                    for clientdata in self.clients:
-                        if clientdata.id == clientid:
-                            clientdata.mouseposition = p.mouseposition
-                            print clientdata.mouseposition
-                            
-            except sf.SocketNotReady:
-                pass #Waiting for data
-            except sf.SocketDisconnected, sf.SocketError:
-                print "Client " + str(clientid) + " was disconnected."
-                del self.client_sockets[clientid]
-                
-                for i in range(len(self.clients)):
-                    if self.clients[i].id == clientid:
-                        del self.clients[i]
-                        break
-                return
+            getting_packets = True
+            while getting_packets:
+                try:
+                    p = Packet.FromString( self.client_sockets[clientid].receive(1024) )
+                    if type(p) == ClientUpdatePacket:
+                        for clientdata in self.clients:
+                            if clientdata.id == clientid:
+                                clientdata.mouse_position = p.mouseposition
+                                clientdata.mouse_down = p.mousedown
+                                
+                except sf.SocketNotReady:
+                    getting_packets = False #Waiting for data
+                except sf.SocketDisconnected, sf.SocketError:
+                    print "Client " + str(clientid) + " was disconnected."
+                    del self.client_sockets[clientid]
+                    getting_packets = False
+                    for i in range(len(self.clients)):
+                        if self.clients[i].id == clientid:
+                            del self.clients[i]
+                            break
+                    return
 
     def Update(self):
         if self.is_server:
