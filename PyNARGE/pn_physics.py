@@ -6,11 +6,12 @@ class PhysicsWorld(object):
     def __init__(self, core):
         self.core = core
         self.mouseJoint = None
+        self.clientJoints = [None, None, None, None]
     
     def Initialize(self, physicsScale=32):
         self.world = b2World(gravity=(0,-10),contactListener=CollisionListener(self.core))
         self.physicsScale=physicsScale
-        self.timeStep = 1.0 / 60
+        self.timeStep = 1.0 / 120.0
         self.vel_iters, self.pos_iters = 6, 2
 
     def Update( self ):
@@ -70,11 +71,11 @@ class PhysicsWorld(object):
                 
     def ServerMouseJoints(self):
         if self.core.networking.connected and self.core.networking.is_server:
-            for clientdata in self.core.networking.clients:
+            for n, clientdata in enumerate(self.core.networking.clients):
                 p = self.GlobalToWorld(clientdata.mouse_position)
                 if clientdata.mouse_down:
-                    if self.mouseJoint != None:
-                        self.mouseJoint.target = p
+                    if self.clientJoints[n] != None:
+                        self.clientJoints[n].target = p
                         return
 
                     aabb = b2AABB(lowerBound=p-(0.001, 0.001), upperBound=p+(0.001, 0.001))
@@ -84,7 +85,7 @@ class PhysicsWorld(object):
                     
                     if query.fixture:
                         body = query.fixture.body
-                        self.mouseJoint = self.world.CreateMouseJoint(
+                        self.clientJoints[n] = self.world.CreateMouseJoint(
                                 bodyA=self.world.CreateStaticBody(),
                                 bodyB=body, 
                                 target=p,
@@ -92,9 +93,9 @@ class PhysicsWorld(object):
                         body.awake = True
 
                 else:
-                    if self.mouseJoint:
-                        self.world.DestroyJoint(self.mouseJoint)
-                        self.mouseJoint = None
+                    if self.clientJoints[n]:
+                        self.world.DestroyJoint(self.clientJoints[n])
+                        self.clientJoints[n] = None
                 
         
     def GetWindowSize(self):

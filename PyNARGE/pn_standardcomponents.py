@@ -101,7 +101,8 @@ class RespawnableComponent(Component):
             self.core.entityManager.RemoveEntity(self.entity) # Destroy self
 
     def Destroy(self):
-        self.core.entityManager.AddEntity( type(self.entity)() ) # Spawn new object
+        if self.core.networking.is_server or not self.entity.networked:
+            self.core.entityManager.AddEntity( type(self.entity)() ) # Spawn new object
 
 class AttractedToComponent(Component):
     def __init__(self, target=None, factor=1.0):

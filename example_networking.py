@@ -23,12 +23,19 @@ class Crate(ComponentEntity):
         self.networked = True
 
 class MouseVisualizer(ComponentEntity):
+    def __init__(self, index):
+        ComponentEntity.__init__(self)
+        self.index = index
+    
     def Build(self):
-        self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture("media\\crate.png") ) )
-
+        self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture("media\\client.png"), None, None, (20, 7) ) )
+        self.drawlayer = 100
+        
     def Step(self):
-        if len(self.core.networking.clients)>0:
-            self.position = self.core.networking.clients[0].mouse_position
+        if len(self.core.networking.clients) > self.index:
+            self.position = self.core.networking.clients[self.index].mouse_position
+        else:
+            self.position = (10000, 10000)
 
         
 class Stone(ComponentEntity):
@@ -36,6 +43,18 @@ class Stone(ComponentEntity):
         self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture("media\\circle.png") ) )
         self.AddComponent( RigidBody_Circular(20, (random.randint(200, appSize.x-200), (random.randint(-400, -100))) ) )
         self.AddComponent( RespawnableComponent( OffscreenCondition ) )
+        self.networked = True
+
+class BigCrate(ComponentEntity):
+    def Build(self):
+        self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture(r"media\big_crate.png") ) )
+        self.AddComponent( RigidBody_Rectangular((32, 32), self.position) )
+        self.networked = True
+
+class MetalCrate(ComponentEntity):
+    def Build(self):
+        self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture(r"media\metal_crate.png") ) )
+        self.AddComponent( RigidBody_Rectangular((64, 64), self.position, density=3.0) )
         self.networked = True
 
 class Ground(ComponentEntity):
@@ -80,16 +99,39 @@ def SpawnStuff(app):
     app.uiManager.Clean()
     app.entityManager.Clean()
 
-    app.entityManager.AddEntity( MouseVisualizer() )
+    if app.networking.is_server:
+        for i in range(3):
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Crate() )
+            app.entityManager.AddEntity( Stone() )
+            app.entityManager.AddEntity( BigCrate() )
+            app.entityManager.AddEntity( MetalCrate() )
+
+        app.entityManager.AddEntity( MouseVisualizer(0) )
+        app.entityManager.AddEntity( MouseVisualizer(1) )
+        app.entityManager.AddEntity( MouseVisualizer(2) )
+        app.entityManager.AddEntity( MouseVisualizer(3) )
+
+    else:
+        app.entityManager.RegisterType( Crate )
+        app.entityManager.RegisterType( Stone )
+        app.entityManager.RegisterType( BigCrate )
+        app.entityManager.RegisterType( MetalCrate )
 
     app.entityManager.AddEntity( BackgroundImage( app.resourceManager.FetchTexture("media\\background.jpg") ) )
     
     app.entityManager.AddEntity( Ground( Vec2(appSize.x/2, appSize.y-100), 0, Vec2(600, 20) ) )
     app.entityManager.AddEntity( CameraController() )
-    
-    for i in range(5):
-        app.entityManager.AddEntity( Crate() )
-        app.entityManager.AddEntity( Stone() )
 
     for i in range(20):
         app.entityManager.AddEntity( Ground( ((i-10)*361+appSize.x/2, appSize.y-64), 0, (361, 128) ) )

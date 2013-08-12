@@ -9,6 +9,7 @@ class ClientData(object):
         self.id = my_id
         self.mouse_position = Vec2(0, 0)
         self.mouse_down = False
+        self.time_out = 0.0
 
 class Networking(object):
     """Handles networking - synchronization, events between client and server"""
@@ -55,27 +56,33 @@ class Networking(object):
         for ent in self.core.entityManager.entities:
             if ent.networked and not ent.spawned_by_server:
                 self.core.entityManager.RemoveEntity(ent)
+
+    def ProcessClientPackets(self, data):
+        p = Packet.FromString( data )
+        if type(p) == ClientAllocationPacket:
+            self.client_id = p.assignedid
+            self.connected = True
+            print "Connected to server at " + str( self.socket_to_server.remote_address ) + ", my assigned ID is " + str(self.client_id)
+        elif type(p) == WorldUpdatePacket:
+            p.Apply(self.core)
+        if p.rest:
+            print "PROCESSING " + ' '.join(p.rest[0:10])
+            self.ProcessClientPackets(' '.join(p.rest))
     
     def UpdateAsClient(self):
         self.DestroyNonServerEntities()
         
         try:
             mouse = self.core.input.mouse
-            self.socket_to_server.send( str( ClientUpdatePacket( self.core.input.GetMousePosition(), mouse.is_button_pressed( mouse.LEFT ) ) ) )
-        except sf.SocketError:
+            self.socket_to_server.send( str( ClientUpdatePacket( self.core.input.GetMousePosition(), mouse.is_button_pressed( mouse.LEFT ) ) ).encode("zlib") )
+        except (sf.SocketError, sf.SocketDisconnected):
             pass #Maybe socket wasn't ready
 
         getting_packets = True
         while getting_packets:
             try:
-                p = Packet.FromString( self.socket_to_server.receive(1024) )
-                if type(p) == ClientAllocationPacket:
-                    self.client_id = p.assignedid
-                    self.connected = True
-                    print "Connected to server at " + str( self.socket_to_server.remote_address ) + ", my assigned ID is " + str(self.client_id)
-                elif type(p) == WorldUpdatePacket:
-                    p.Apply(self.core)
-                    
+                data = self.socket_to_server.receive(20000).decode("zlib")
+                self.ProcessClientPackets(data)
             except sf.SocketNotReady:
                 getting_packets = False #Waiting for data
 
@@ -93,7 +100,7 @@ class Networking(object):
             socket.blocking = False
             newid = self.id_dispensor.GetNewID()
             self.client_sockets[newid] = socket
-            self.client_sockets[newid].send( str( ClientAllocationPacket( newid ) ) )
+            self.client_sockets[newid].send( str( ClientAllocationPacket( newid ) ).encode("zlib") )
             self.clients.append( ClientData(newid) )
             print "Client connected from " + str(self.client_sockets[newid].remote_address) + ", allocated ID will be " + str(newid)
         except (sf.SocketDisconnected, sf.SocketNotReady, sf.SocketError):
@@ -101,12 +108,14 @@ class Networking(object):
 
         self.world_packet_timer += self.core.time.GetDelta()
         #Do world updates
-        if( self.world_packet_timer >= 1.0 ):
+        if( self.world_packet_timer >= 0.25 ):
             outpacket = WorldUpdatePacket()
             outpacket.Create(self.core)
+            encoded = str(outpacket).encode('zlib')
+            print "Outgoing WP @ " + str((100*len(encoded))/(len(str(outpacket)))) + "% compression to " + "{0:.2f}".format(float(len(encoded))/1024.0) + "Kb"
             for clientid in self.client_sockets.keys():
                 try:
-                    self.client_sockets[clientid].send( str( outpacket ) )
+                    self.client_sockets[clientid].send( encoded )
                 except (sf.SocketDisconnected, sf.SocketNotReady, sf.SocketError):
                     pass #Weren't any new connections to accept
             self.world_packet_timer = 0.0
@@ -115,7 +124,7 @@ class Networking(object):
             getting_packets = True
             while getting_packets:
                 try:
-                    p = Packet.FromString( self.client_sockets[clientid].receive(1024) )
+                    p = Packet.FromString( self.client_sockets[clientid].receive(1024).decode("zlib") )
                     if type(p) == ClientUpdatePacket:
                         for clientdata in self.clients:
                             if clientdata.id == clientid:

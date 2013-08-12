@@ -25,6 +25,9 @@ class EntityManager(object):
         self.types[str(type(ent).__name__)] = type(ent)
         return ent
 
+    def RegisterType(self, typedata):
+        self.types[str(typedata.__name__)] = typedata
+
     def AddForcedEntity(self, typestring, ent_id, position):
         ent = self.types[typestring]()
         ent.id = ent_id
