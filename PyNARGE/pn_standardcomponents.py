@@ -10,6 +10,7 @@ class TextComponent(Component):
         self.size = size
         self.font = font
         self.color = color
+        self.scale = 1.0
     
     def Init(self):
         self.text = Text()
@@ -19,10 +20,16 @@ class TextComponent(Component):
 
     def SetText(self, message):
         self.message = message
+
+    def ReCenter(self):
+        self.text.origin = Vec2(self.text.local_bounds.size)/2
         
     def Step(self):
         self.text.position = self.entity.position + self.offset
         self.text.string = self.message
+        self.text.color = self.color
+        self.text.ratio = (self.scale, self.scale)
+        self.text.rotation = self.entity.rotation
         
     def Draw(self):
         self.core.renderer.Draw(self.text)

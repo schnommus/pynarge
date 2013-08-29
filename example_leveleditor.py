@@ -220,7 +220,7 @@ if __name__=="__main__":
     Left/Right - Aim Cannon
     Space - Fire Cannon"""
 
-    app.uiManager.AddEntity( DefaultText(text, (10, 90), Color(0, 0, 0) ) )
+    app.uiManager.AddEntity( DefaultText(text, (10, 90), 20, Color(0, 0, 0) ) )
 
     app.entityManager.AddEntity( BackgroundImage( app.resourceManager.FetchTexture(r"media\background.jpg") ) )
     app.entityManager.AddEntity( CameraController() )

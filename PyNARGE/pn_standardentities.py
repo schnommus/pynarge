@@ -16,17 +16,19 @@ class BackgroundImage(ComponentEntity):
         
     def Step(self):
         self.position = self.core.renderer.GetCameraPosition()
+        self.rotation = -self.core.renderer.cameraView.rotation
 
 
 class DefaultText(ComponentEntity):
-    def __init__(self, text, position, color=Color.WHITE):
+    def __init__(self, text, position, size, color=Color.WHITE):
         ComponentEntity.__init__(self)
         self.text = text
         self.position = position
         self.color = color
+        self.size = size
         
     def Build(self):
-        self.AddComponent( TextComponent(self.text, None, 20, self.color) )
+        self.AddComponent( TextComponent(self.text, None, self.size, self.color) )
 
 
 class WaterParticle(ComponentEntity):
