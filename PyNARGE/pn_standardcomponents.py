@@ -1,5 +1,5 @@
 from pn_component import Component
-from pn_resources import Text, Color, Sprite
+from pn_resources import Text, Color, Sprite, Rectangle
 from pn_utils import Vec2
 from random import randint
 
@@ -66,6 +66,87 @@ class SpriteComponent(Component):
                 float(self.forcedSize.y)/float(self.sprite.texture.size.y) ) )
             
         self.sprite.position = self.entity.position + self.offset
+        self.sprite.rotation = -self.entity.rotation
+        if hasattr( self.entity, 'image' ):
+            self.sprite.rotation = self.entity.rotation
+        self.core.renderer.Draw(self.sprite, self.shaderPass)
+
+class PixelSpriteComponent(Component):
+    def __init__(self, texture, forcedSize=None, shaderPass=None, offset=(0,0)):
+        self.sprite = Sprite(texture, Rectangle( (0, 0), (texture.size.x/8, texture.size.y)) )
+        self.shaderPass = shaderPass
+        self.offset = Vec2(offset)
+        self.alpha = 255
+        self.scale = 4
+        self.forcedSize = None
+        if forcedSize != None:
+            self.forcedSize = Vec2(forcedSize)
+            
+        self.sprite.origin = Vec2(texture.size.x/8, texture.size.y)/2
+    
+    def SetTexture(self, texture, forcedSize=None, shaderPass=None):
+        self.sprite = Sprite(texture)
+        self.shaderPass = shaderPass
+        
+        self.forcedSize = Vec2(forcedSize)
+            
+        self.sprite.origin = Vec2(texture.size)/2
+    
+    def Draw(self):
+        self.sprite.color = Color(255, 255, 255, self.alpha)
+        
+        
+        self.sprite.ratio = Vec2(self.scale, self.scale)
+        if self.forcedSize != None:
+            self.sprite.scale(
+                ( float(self.forcedSize.x)/float(self.sprite.texture.size.x),
+                float(self.forcedSize.y)/float(self.sprite.texture.size.y) ) )
+            
+        self.sprite.position = Vec2(1+4*int(Vec2(self.entity.position + self.offset).x/4), 4*int(Vec2(self.entity.position + self.offset).y/4))
+        self.sprite.rotation = -self.entity.rotation + 22.5
+        self.sprite.rotation %= 360
+        index = int( self.sprite.rotation/45)
+        #self.sprite.rotation = int( self.sprite.rotation/45)*45
+        self.sprite.rotation = 0
+
+        self.sprite.texture_rectangle = Rectangle( (index*self.sprite.texture.size.x/8, 0), (self.sprite.texture.size.x/8, self.sprite.texture.size.y))
+        
+        if hasattr( self.entity, 'image' ):
+            self.sprite.rotation = self.entity.rotation
+        self.core.renderer.Draw(self.sprite, self.shaderPass)
+
+class StaticPixelSpriteComponent(Component):
+    def __init__(self, texture, forcedSize=None, shaderPass=None, offset=(0,0)):
+        self.sprite = Sprite( texture )
+        self.shaderPass = shaderPass
+        self.offset = Vec2(offset)
+        self.alpha = 255
+        self.scale = 1
+        self.forcedSize = None
+        if forcedSize != None:
+            self.forcedSize = Vec2(forcedSize)
+            
+        self.sprite.origin = Vec2(texture.size)/2
+    
+    def SetTexture(self, texture, forcedSize=None, shaderPass=None):
+        self.sprite = Sprite(texture)
+        self.shaderPass = shaderPass
+        
+        self.forcedSize = Vec2(forcedSize)
+            
+        self.sprite.origin = Vec2(texture.size)/2
+    
+    def Draw(self):
+        self.sprite.color = Color(255, 255, 255, self.alpha)
+        
+        
+        self.sprite.ratio = Vec2(self.scale, self.scale)
+        if self.forcedSize != None:
+            self.sprite.scale(
+                ( float(self.forcedSize.x)/float(self.sprite.texture.size.x),
+                float(self.forcedSize.y)/float(self.sprite.texture.size.y) ) )
+            
+        self.sprite.position = Vec2(1+4*int(Vec2(self.entity.position + self.offset).x/4), 4*int(Vec2(self.entity.position + self.offset).y/4-1))
         self.sprite.rotation = -self.entity.rotation
         if hasattr( self.entity, 'image' ):
             self.sprite.rotation = self.entity.rotation

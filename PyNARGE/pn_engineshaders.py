@@ -8,6 +8,13 @@ class EngineShaders(object):
     def __init__(self, core):
         self.core = core
 
+    def GetPixelateShader(self):
+        if not hasattr(self, "_pixelateShader"):
+            self._pixelateShader = self.core.renderer.AddShaderPass( ShaderPass( self.core.resourceManager.FetchShader(EngineMediaDirectory()+r"shaders\pixelate.glsl") ) )
+            self._pixelateShader.SetTarget( self.core.renderer )
+            
+        return self._pixelateShader
+
     def GetWaterShader(self):
         """Returns the engine's 2D water shader as :class:`PyNARGE.ShaderPass`. See :class:`PyNARGE.WaterParticle` for an example usage.
 

@@ -15,6 +15,9 @@ class ResourceManager(object):
     def FetchDefaultFont(self):
         return self.FetchFont(EngineMediaDirectory()+"fonts\pn_font.ttf")
 
+    def FetchDefaultFontPixel(self):
+        return self.FetchFont(EngineMediaDirectory()+"fonts\pn_fontpixel.ttf")
+
     def FetchDefaultFontMono(self):
         return self.FetchFont(EngineMediaDirectory()+"fonts\pn_fontmono.ttf")
 

@@ -30,6 +30,17 @@ class DefaultText(ComponentEntity):
     def Build(self):
         self.AddComponent( TextComponent(self.text, None, self.size, self.color) )
 
+class DefaultPixelText(ComponentEntity):
+    def __init__(self, text, position, size=32, color=Color.WHITE):
+        ComponentEntity.__init__(self)
+        self.text = text
+        self.position = position
+        self.color = color
+        self.size = size
+        
+    def Build(self):
+        self.AddComponent( TextComponent(self.text, self.core.resourceManager.FetchDefaultFontPixel(), self.size, self.color) )
+
 
 class WaterParticle(ComponentEntity):
     def Build(self):

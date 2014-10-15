@@ -1,5 +1,5 @@
 uniform sampler2D texture;
-float pixel_threshold = 0.02;
+float pixel_threshold = 0.01;
 
 void main()
 {
