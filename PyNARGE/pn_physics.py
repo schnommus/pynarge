@@ -11,7 +11,7 @@ class PhysicsWorld(object):
     def Initialize(self, physicsScale=32):
         self.world = b2World(gravity=(0,-10),contactListener=CollisionListener(self.core))
         self.physicsScale=physicsScale
-        self.timeStep = 1.0 / 120.0
+        self.timeStep = 1.0 / 60.0
         self.vel_iters, self.pos_iters = 6, 2
 
     def Update( self ):

@@ -22,7 +22,7 @@ class TextComponent(Component):
         self.message = message
 
     def ReCenter(self):
-        self.text.origin = Vec2(self.text.local_bounds.size)/2
+        self.text.origin = Vec2(self.text.local_bounds.size.x/2, self.size/2)
         
     def Step(self):
         self.text.position = self.entity.position + self.offset
@@ -39,12 +39,11 @@ class SpriteComponent(Component):
         self.sprite = Sprite(texture)
         self.shaderPass = shaderPass
         self.offset = Vec2(offset)
-        
+        self.alpha = 255
+        self.scale = 1
+        self.forcedSize = None
         if forcedSize != None:
-            forcedSize = Vec2(forcedSize)
-            self.sprite.scale(
-                ( float(forcedSize.x)/float(texture.size.x),
-                float(forcedSize.y)/float(texture.size.y) ) )
+            self.forcedSize = Vec2(forcedSize)
             
         self.sprite.origin = Vec2(texture.size)/2
     
@@ -52,17 +51,24 @@ class SpriteComponent(Component):
         self.sprite = Sprite(texture)
         self.shaderPass = shaderPass
         
-        if forcedSize != None:
-            forcedSize = Vec2(forcedSize)
-            self.sprite.scale(
-                ( float(forcedSize.x)/float(texture.size.x),
-                float(forcedSize.y)/float(texture.size.y) ) )
+        self.forcedSize = Vec2(forcedSize)
             
         self.sprite.origin = Vec2(texture.size)/2
     
     def Draw(self):
+        self.sprite.color = Color(255, 255, 255, self.alpha)
+        
+        
+        self.sprite.ratio = Vec2(self.scale, self.scale)
+        if self.forcedSize != None:
+            self.sprite.scale(
+                ( float(self.forcedSize.x)/float(self.sprite.texture.size.x),
+                float(self.forcedSize.y)/float(self.sprite.texture.size.y) ) )
+            
         self.sprite.position = self.entity.position + self.offset
         self.sprite.rotation = -self.entity.rotation
+        if hasattr( self.entity, 'image' ):
+            self.sprite.rotation = self.entity.rotation
         self.core.renderer.Draw(self.sprite, self.shaderPass)
 
 class FollowComponent(Component):

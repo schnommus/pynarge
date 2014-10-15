@@ -20,7 +20,7 @@ class BackgroundImage(ComponentEntity):
 
 
 class DefaultText(ComponentEntity):
-    def __init__(self, text, position, size, color=Color.WHITE):
+    def __init__(self, text, position, size=20, color=Color.WHITE):
         ComponentEntity.__init__(self)
         self.text = text
         self.position = position
