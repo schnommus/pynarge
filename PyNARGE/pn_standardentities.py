@@ -46,3 +46,8 @@ class WaterParticle(ComponentEntity):
     def Build(self):
         self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture(EngineMediaDirectory()+r"textures\waterparticle.png"), (16, 16), self.core.engineShaders.GetWaterShader()) )
         self.AddComponent( RigidBody_Circular(6, self.position, 0.0, 0.2 ) )
+
+class PixelWaterParticle(ComponentEntity):
+    def Build(self):
+        self.AddComponent( SpriteComponent( self.core.resourceManager.FetchTexture(EngineMediaDirectory()+r"textures\waterparticle.png"), (21, 21), self.core.engineShaders.GetWaterShader(True)) )
+        self.AddComponent( RigidBody_Circular(8, self.position, 0.0, 0.2 ) )

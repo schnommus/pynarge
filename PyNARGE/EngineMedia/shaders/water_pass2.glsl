@@ -71,9 +71,9 @@ void main() {
   gl_FragColor = avgValue / coefficientSum;
   
   if( gl_FragColor.a > 0.8 )
-    gl_FragColor = vec4(0.2, 0.2, 0.7, 0.4);
+    gl_FragColor = vec4(0.2, 0.2, 0.7, 0.8);
   else if( gl_FragColor.a > 0.5 )
-	gl_FragColor =  vec4(0, 0, 0.7, 0.5);
+	gl_FragColor =  vec4(0, 0, 0.7, 0.9);
   else
 	gl_FragColor =  vec4(0, 0, 0, 0);
 

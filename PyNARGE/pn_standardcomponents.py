@@ -46,6 +46,15 @@ class SpriteComponent(Component):
             self.forcedSize = Vec2(forcedSize)
             
         self.sprite.origin = Vec2(texture.size)/2
+
+        self.sprite.color = Color(255, 255, 255, self.alpha)
+        
+        
+        self.sprite.ratio = Vec2(self.scale, self.scale)
+        if self.forcedSize != None:
+            self.sprite.scale(
+                ( float(self.forcedSize.x)/float(self.sprite.texture.size.x),
+                float(self.forcedSize.y)/float(self.sprite.texture.size.y) ) )
     
     def SetTexture(self, texture, forcedSize=None, shaderPass=None):
         self.sprite = Sprite(texture)
@@ -56,30 +65,26 @@ class SpriteComponent(Component):
         self.sprite.origin = Vec2(texture.size)/2
     
     def Draw(self):
-        self.sprite.color = Color(255, 255, 255, self.alpha)
-        
-        
-        self.sprite.ratio = Vec2(self.scale, self.scale)
-        if self.forcedSize != None:
-            self.sprite.scale(
-                ( float(self.forcedSize.x)/float(self.sprite.texture.size.x),
-                float(self.forcedSize.y)/float(self.sprite.texture.size.y) ) )
             
         self.sprite.position = self.entity.position + self.offset
         self.sprite.rotation = -self.entity.rotation
-        if hasattr( self.entity, 'image' ):
-            self.sprite.rotation = self.entity.rotation
+
         self.core.renderer.Draw(self.sprite, self.shaderPass)
+
+pixelDoubleFactor = 4
 
 class PixelSpriteComponent(Component):
     def __init__(self, texture, shaderPass=None, hasDirectionSheet=False):
         self.sprite = Sprite(texture, Rectangle( (0, 0), (texture.size.x/(8 if hasDirectionSheet else 1), texture.size.y)) )
         self.shaderPass = shaderPass
         self.alpha = 255
-        self.scale = 4
+        self.scale = pixelDoubleFactor
         self.hasDirectionSheet = hasDirectionSheet
         
         self.sprite.origin = Vec2(texture.size.x/(8 if hasDirectionSheet else 1), texture.size.y)/2
+
+        self.sprite.color = Color(255, 255, 255, self.alpha)
+        self.sprite.ratio = Vec2(self.scale, self.scale)
     
     def SetTexture(self, texture, shaderPass=None, hasDirectionSheet=False):
         self.sprite = Sprite(texture, Rectangle( (0, 0), (texture.size.x/(8 if hasDirectionSheet else 1), texture.size.y)) )
@@ -89,12 +94,7 @@ class PixelSpriteComponent(Component):
         self.sprite.origin = Vec2(texture.size.x/(8 if hasDirectionSheet else 1), texture.size.y)/2
     
     def Draw(self):
-        self.sprite.color = Color(255, 255, 255, self.alpha)
-        
-        
-        self.sprite.ratio = Vec2(self.scale, self.scale)
-            
-        self.sprite.position = Vec2(1+4*int(self.entity.position.x/4), 4*int(self.entity.position.y/4))
+        self.sprite.position = Vec2(1+pixelDoubleFactor*int(self.entity.position.x/pixelDoubleFactor), pixelDoubleFactor*int(self.entity.position.y/pixelDoubleFactor))
         self.sprite.rotation = -self.entity.rotation + 22.5
         self.sprite.rotation %= 360
 

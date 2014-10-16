@@ -15,7 +15,7 @@ class EngineShaders(object):
             
         return self._pixelateShader
 
-    def GetWaterShader(self):
+    def GetWaterShader(self, withPixelate=False):
         """Returns the engine's 2D water shader as :class:`PyNARGE.ShaderPass`. See :class:`PyNARGE.WaterParticle` for an example usage.
 
         :returns: :class:`ShaderPass` -- the shader instance"""
@@ -24,7 +24,13 @@ class EngineShaders(object):
             self._waterShader = self.core.renderer.AddShaderPass( ShaderPass( self.core.resourceManager.FetchShader(EngineMediaDirectory()+r"shaders\water_pass1.glsl") ) )
             waterPass2 = self.core.renderer.AddShaderPass( ShaderPass( self.core.resourceManager.FetchShader(EngineMediaDirectory()+r"shaders\water_pass2.glsl") ) )
             self._waterShader.SetTarget( waterPass2 )
-            waterPass2.SetTarget( self.core.renderer )
+
+            result = None
+            
+            if not withPixelate:
+                waterPass2.SetTarget( self.core.renderer )
+            else:
+                waterPass2.SetTarget( self.GetPixelateShader() )
 
             self._waterShader.SetParameter( "size_x", self.core.renderer.GetWindowSize().x )
             self._waterShader.SetParameter( "size_y", self.core.renderer.GetWindowSize().y )
