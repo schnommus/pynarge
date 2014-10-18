@@ -90,7 +90,7 @@ class PixelSpriteComponent(Component):
         self.sprite = Sprite(texture, Rectangle( (0, 0), (texture.size.x/(8 if hasDirectionSheet else 1), texture.size.y)) )
         self.shaderPass = shaderPass
         self.hasDirectionSheet = hasDirectionSheet
-            
+        self.sprite.ratio = Vec2(self.scale, self.scale)
         self.sprite.origin = Vec2(texture.size.x/(8 if hasDirectionSheet else 1), texture.size.y)/2
     
     def Draw(self):

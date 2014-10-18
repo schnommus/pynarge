@@ -14,6 +14,9 @@ class PhysicsWorld(object):
         self.timeStep = 1.0 / 60.0
         self.vel_iters, self.pos_iters = 6, 2
 
+    def SetGravity(self, gravity):
+        self.world.gravity = gravity
+
     def Update( self ):
         self.world.Step(self.timeStep, self.vel_iters, self.pos_iters)
         self.world.ClearForces()
